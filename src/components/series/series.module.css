@@ -1,0 +1,119 @@
+/*
+ * Each composition arranges the same three parts — header, the artist's words, the hang —
+ * differently. Phones stack them in reading order.
+ */
+.room {
+  position: relative;
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--gutter);
+  isolation: isolate;
+}
+
+.header {
+  max-width: 40rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 750;
+  line-height: 0.92;
+}
+
+.title a {
+  text-decoration: none;
+}
+
+.title a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-decoration-color: var(--accent);
+}
+
+.period {
+  margin-top: var(--space-3);
+  font-family: var(--font-label);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.summary {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-5);
+  font-size: var(--step-1);
+  line-height: 1.4;
+  max-width: 34ch;
+}
+
+.more {
+  margin-top: var(--space-5);
+  font-family: var(--font-label);
+  font-weight: 650;
+}
+
+.hang {
+  min-width: 0;
+}
+
+@media (min-width: 60rem) {
+  .room {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+
+  /* wall: text on the left, the works given the rest of the wall */
+  .room[data-composition="wall"] .header {
+    grid-column: 1 / span 4;
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+  .room[data-composition="wall"] .quote {
+    grid-column: 1 / span 4;
+    grid-row: 3;
+  }
+  .room[data-composition="wall"] .hang {
+    grid-column: 6 / -1;
+    grid-row: 1 / span 3;
+  }
+
+  /* salon: a dense hang across the whole wall, text above it, the artist's words to the side */
+  .room[data-composition="salon"] .header {
+    grid-column: 1 / span 6;
+  }
+  .room[data-composition="salon"] .quote {
+    grid-column: 8 / -1;
+    align-self: end;
+  }
+  .room[data-composition="salon"] .hang {
+    grid-column: 1 / -1;
+  }
+
+  /* sequence: the strip runs off the edge of the page */
+  .room[data-composition="sequence"] .header {
+    grid-column: 1 / span 5;
+  }
+  .room[data-composition="sequence"] .quote {
+    grid-column: 7 / -1;
+    align-self: center;
+  }
+  .room[data-composition="sequence"] .hang {
+    grid-column: 1 / -1;
+    margin-right: calc(-1 * var(--gutter));
+  }
+
+  /* stage: centred under the lights */
+  .room[data-composition="stage"] {
+    padding-block: var(--space-9);
+  }
+  .room[data-composition="stage"] .header {
+    grid-column: 2 / span 5;
+  }
+  .room[data-composition="stage"] .quote {
+    grid-column: 8 / span 4;
+    align-self: center;
+  }
+  .room[data-composition="stage"] .hang {
+    grid-column: 2 / -2;
+  }
+}

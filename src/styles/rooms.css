@@ -1,0 +1,44 @@
+/*
+ * ROOMS — each section of the site is hung in a room. A room only remaps semantic tokens,
+ * so any component works in any room. Series choose their room in src/content/series.ts.
+ *
+ * hall  — the daylight gallery from the references; the default
+ * stage — darkness and spotlights, for the interview and for painting live with musicians
+ * paper — newsprint and black ink, for the caricatures drawn for newspapers
+ */
+[data-room="hall"] {
+  --surface: var(--p-wall);
+  --surface-alt: var(--p-wall-deep);
+  color: var(--text);
+  background: var(--surface);
+}
+
+[data-room="stage"] {
+  --surface: var(--p-stage);
+  --surface-alt: var(--p-stage-2);
+  --text: var(--p-stage-ink);
+  --text-muted: var(--p-stage-ink-2);
+  --text-subtle: var(--p-stage-ink-2);
+  --line: color-mix(in srgb, var(--p-stage-ink) 22%, transparent);
+  --line-strong: var(--p-stage-ink);
+  --accent: var(--p-ochre-light);
+  --focus: var(--p-ochre-light);
+  --placeholder: var(--p-stage-2);
+  --placeholder-thread: color-mix(in srgb, var(--p-stage-ink) 8%, transparent);
+  --placeholder-ink: var(--p-stage-ink-2);
+  --shadow-hang: 0 0 0 transparent;
+  color: var(--text);
+  background: var(--surface);
+}
+
+[data-room="paper"] {
+  --surface: var(--p-paper);
+  --surface-alt: color-mix(in srgb, var(--p-paper) 88%, var(--p-paper-ink));
+  --text: var(--p-paper-ink);
+  --text-muted: color-mix(in srgb, var(--p-paper-ink) 78%, var(--p-paper));
+  --text-subtle: color-mix(in srgb, var(--p-paper-ink) 68%, var(--p-paper));
+  --line: color-mix(in srgb, var(--p-paper-ink) 30%, transparent);
+  --line-strong: var(--p-paper-ink);
+  color: var(--text);
+  background: var(--surface);
+}

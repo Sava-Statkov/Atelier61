@@ -1,0 +1,145 @@
+.cite {
+  font-family: var(--font-label);
+  font-size: 0.68em;
+  font-weight: 600;
+  line-height: 0;
+  margin-left: 0.12em;
+}
+
+.cite a {
+  text-decoration: none;
+  color: var(--accent);
+  padding: 0 0.1em;
+}
+
+.cite a:hover {
+  text-decoration: underline;
+}
+
+/* The artist's words: larger, no box, Bulgarian quotation marks hanging into the margin */
+.quote {
+  max-width: 34ch;
+}
+
+.quote blockquote p {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 500;
+  line-height: 1.02;
+  text-indent: -0.38em;
+}
+
+.quote[data-size="l"] blockquote p {
+  font-size: var(--step-4);
+}
+
+.quote figcaption {
+  margin-top: var(--space-3);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: var(--measure);
+}
+
+.facts li + li {
+  margin-top: var(--space-3);
+}
+
+.facts li {
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--line);
+}
+
+/* The artist's view (as reported) is set apart from plain fact */
+.facts li[data-voice="artist"],
+.blocks p[data-voice="artist"] {
+  border-left-color: var(--accent);
+}
+
+.voice {
+  font-family: var(--font-label);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.blocks {
+  max-width: var(--measure);
+}
+
+.blocks > * + * {
+  margin-top: var(--space-5);
+}
+
+.blocks > p[data-voice] {
+  padding-left: var(--space-4);
+  border-left: 1px solid transparent;
+}
+
+.blocks > figure {
+  margin-block: var(--space-7);
+}
+
+.photo img {
+  width: 100%;
+  height: auto;
+}
+
+.photo figcaption {
+  margin-top: var(--space-2);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.credit {
+  display: block;
+}
+
+.blockHeading {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 700;
+  margin-top: var(--space-7);
+}
+
+.sources {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line);
+  font-size: var(--step--1);
+  max-width: var(--measure);
+}
+
+.sourcesHeading {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+}
+
+.sourcesNote {
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.sources ol {
+  padding-left: 1.6em;
+}
+
+.sources li + li {
+  margin-top: var(--space-2);
+}
+
+.sources li:target {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.sourceMeta {
+  display: block;
+  color: var(--text-muted);
+}

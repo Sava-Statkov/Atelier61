@@ -1,0 +1,18 @@
+{
+  "/media/hero/hero-image.jpg": {
+    "width": 846,
+    "height": 960,
+    "blur": "data:image/webp;base64,UklGRsQAAABXRUJQVlA4ILgAAADwBACdASoVABgAPu1wsFIppiSiqAgBMB2JbACdM2QBqgeRYJB4aaIuXTXGGBeznMAA/U88MaaTAiyJBXovvXNP6iOvOt8cMBiqQShbOGqK9Cgvuz1sO342WmKk34jl/mFvkrELEUppePEVP0SFlqcafh4Fm9ULq7pbUMJYcu8sG1fCJ5gqzhpfo8c7fmf6uUznHpo8T5c3WnvUkaAHN29gl7zSGJVQ8yeiTCqLAMQpCilVFDCyEAAA",
+    "color": "#080808",
+    "mtimeMs": 1793220421046.7952,
+    "size": 163536
+  },
+  "/media/photos/rumen-statkov.png": {
+    "width": 557,
+    "height": 757,
+    "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwBACdASoSABgAPu1gq1AppKOisBgIATAdiWMAuwAQ78blO9llTagvNC0CK7rQAP70IlpCYfZlP18k76s6NYrnwmtClByDK3DHMLWesZZa9uzpWMrUOLJNif8ZfFLZurRimh69XXxNwE4ESAAAAA==",
+    "color": "#080808",
+    "mtimeMs": 1793207493594.3267,
+    "size": 604108
+  }
+}

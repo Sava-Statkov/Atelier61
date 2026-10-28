@@ -1,0 +1,146 @@
+@import "../styles/tokens.css";
+@import "../styles/rooms.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--p-wall);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: var(--step-0);
+  line-height: var(--leading-text);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+p,
+li,
+dd,
+blockquote {
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color var(--dur-quick) var(--ease-out);
+}
+
+a:hover {
+  text-decoration-color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--p-ochre-light);
+  color: var(--p-ink);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: 0;
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: var(--p-ink);
+  color: var(--p-wall);
+  transform: translateY(-120%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* Shared page frame */
+.page {
+  padding-inline: var(--gutter);
+  max-width: var(--page-max);
+  margin-inline: auto;
+}
+
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-top: 1em;
+}
+
+/* Thumbnail → detail morph for artworks (React <ViewTransition share="artwork-morph">) */
+::view-transition-group(.artwork-morph) {
+  animation-duration: var(--dur-move);
+  animation-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

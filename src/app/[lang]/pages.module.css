@@ -1,0 +1,53 @@
+/* Shared styles for inner pages */
+.intro {
+  padding-block: var(--space-7) var(--space-6);
+}
+
+.pageTitle {
+  font-family: var(--font-display);
+  font-size: var(--step-5);
+  font-weight: 800;
+  line-height: 0.85;
+}
+
+.lead {
+  margin-top: var(--space-5);
+  max-width: 40ch;
+  font-size: var(--step-1);
+  line-height: 1.4;
+}
+
+.notFound {
+  padding-block: var(--space-9);
+}
+
+.notFound h1 {
+  font-family: var(--font-display);
+  font-size: var(--step-5);
+  line-height: var(--leading-display);
+}
+
+.notFound p {
+  margin-top: var(--space-4);
+}
+
+.section {
+  padding-block: var(--space-7);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 750;
+  line-height: 0.95;
+  margin-bottom: var(--space-5);
+}
+
+.subtle {
+  color: var(--text-muted);
+}
+
+.labelText {
+  font-family: var(--font-label);
+  font-weight: 600;
+}

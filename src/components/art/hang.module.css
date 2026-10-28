@@ -1,0 +1,82 @@
+/* Every list item carries --ratio (width / height) so works keep their proportions. */
+.wall,
+.salon,
+.stage,
+.sequence ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Few, large works with room around them; no work taller than 70% of the screen.
+   Hung on a common centre line, as in a gallery. */
+.wall {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8) var(--space-7);
+}
+
+.wall > li {
+  flex: var(--ratio) 1 calc(var(--ratio) * 20rem);
+  max-width: min(100%, calc(var(--ratio) * 70vh));
+}
+
+/* Dense salon hang: many small works, edges close, rows justified */
+.salon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-5) var(--space-4);
+}
+
+.salon > li {
+  flex: var(--ratio) 1 calc(var(--ratio) * 8.5rem);
+  max-width: calc(var(--ratio) * 15rem);
+}
+
+.salon::after {
+  content: "";
+  flex: 20 1 0;
+}
+
+/* Works read one after another, sideways, like frames of movement */
+.sequence {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--space-5);
+  scrollbar-color: var(--line-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.sequence ul {
+  display: flex;
+  gap: var(--space-6);
+  width: max-content;
+  align-items: center;
+}
+
+.sequence li {
+  flex: 0 0 auto;
+  width: calc(var(--ratio) * min(24rem, 52vh));
+  scroll-snap-align: start;
+}
+
+/* Work made in front of an audience: hung in the dark with room for the light */
+.stage {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: var(--space-7);
+}
+
+.stage > li {
+  flex: 0 1 calc(var(--ratio) * 20rem);
+}
+
+.empty {
+  font-family: var(--font-label);
+  color: var(--text-subtle);
+}

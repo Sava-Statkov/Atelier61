@@ -1,0 +1,57 @@
+/* Stone band under the hall: the photograph fills the band */
+.stone {
+  position: relative;
+  height: clamp(8rem, 22vh, 15rem);
+  overflow: hidden;
+}
+
+.stoneImage {
+  object-fit: cover;
+}
+
+/* Recessed light slot */
+.slot {
+  height: 4px;
+  margin-inline: var(--gutter);
+  background: var(--p-light);
+  border-block: 1px solid color-mix(in srgb, var(--p-ink) 55%, transparent);
+  box-shadow: 0 0 1.4rem 0.2rem color-mix(in srgb, var(--p-light) 80%, transparent);
+}
+
+[data-room="stage"] .slot {
+  border-color: transparent;
+}
+
+/*
+ * Light rays: each one a single beam from a point above the top edge, fading with distance.
+ * No lamp is drawn.
+ */
+.rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ray {
+  --ray: 255 253 246;
+  position: absolute;
+  /* the apex sits well above the frame, so the rays enter already spread and no source is seen */
+  top: -42%;
+  left: var(--x);
+  width: min(110vw, 76rem);
+  height: 175%;
+  transform: translateX(-50%) rotate(var(--tilt));
+  transform-origin: 50% 0;
+  /* one beam: brightest along its axis, soft at both edges */
+  background: conic-gradient(
+    from 173deg at 50% 0%,
+    transparent 0deg,
+    rgb(var(--ray) / 0.04) 2.5deg,
+    rgb(var(--ray) / 0.15) 7deg,
+    rgb(var(--ray) / 0.04) 11.5deg,
+    transparent 14deg
+  );
+  mask-image: linear-gradient(to bottom, #000 0%, #000 30%, rgb(0 0 0 / 0.65) 60%, transparent 96%);
+  mix-blend-mode: screen;
+}

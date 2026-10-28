@@ -1,0 +1,93 @@
+/*
+ * DESIGN TOKENS — provisional first iteration. See docs/art-direction.md.
+ *
+ * Layer 1, primitives: colours sampled from the reference photographs in docs/references.
+ * Layer 2, semantic tokens: what components use. Rooms (rooms.css) remap layer 2.
+ * Change the art direction here and in rooms.css; components should not contain raw colours.
+ */
+:root {
+  /* design2 — daylight gallery: wall, white-painted planks, light from the window */
+  --p-wall: #f1f1ee;
+  --p-wall-deep: #e3e3df;
+  --p-plank: #e6e3dc;
+  --p-plank-seam: #c9c3b9;
+  --p-light: #fffdf6;
+  /* design1 — lavender-grey wall, veined stone floor */
+  --p-wall-shade: #c9cad3;
+  --p-vein: #8d929b;
+  /* design2 painting — deep teal-black ink, raw linen edge */
+  --p-ink: #1c2a2e;
+  --p-ink-2: #3c4d51;
+  --p-ink-3: #5a6a6e;
+  --p-teal: #2c4a4f;
+  --p-linen: #e8d7ca;
+  --p-linen-thread: #d6c0af;
+  --p-linen-ink: #6b5446;
+  /* design1 painting — ochre brushwork */
+  --p-ochre: #9a6414;
+  --p-ochre-light: #d9a44f;
+  /* stage — the darkest passage of the design2 painting */
+  --p-stage: #101b1d;
+  --p-stage-2: #1a2a2d;
+  --p-stage-ink: #e6ebe9;
+  --p-stage-ink-2: #a9b6b4;
+  /* newsprint, for ink drawings and caricatures */
+  --p-paper: #e3e1d9;
+  --p-paper-ink: #000;
+
+  /* Semantic */
+  --surface: var(--p-wall);
+  --surface-alt: var(--p-wall-deep);
+  --text: var(--p-ink);
+  --text-muted: var(--p-ink-2);
+  --text-subtle: var(--p-ink-3);
+  --line: color-mix(in srgb, var(--p-ink) 22%, transparent);
+  --line-strong: var(--p-ink);
+  --accent: var(--p-ochre);
+  --focus: var(--p-ochre);
+  --floor: var(--p-plank);
+  --floor-seam: var(--p-plank-seam);
+  --daylight: var(--p-light);
+  --placeholder: var(--p-linen);
+  --placeholder-thread: var(--p-linen-thread);
+  --placeholder-ink: var(--p-linen-ink);
+  /* design1 — the soft shadow under a hung painting */
+  --shadow-hang: 0 1.6rem 2.2rem -1.4rem color-mix(in srgb, var(--p-ink) 55%, transparent),
+    0 0.2rem 0.5rem -0.2rem color-mix(in srgb, var(--p-ink) 30%, transparent);
+
+  /* Type */
+  --font-text: var(--font-sofia), system-ui, sans-serif;
+  --font-display: var(--font-sofia-xc), var(--font-sofia), sans-serif;
+  --font-label: var(--font-sofia-sc), var(--font-sofia), sans-serif;
+  /* Perfect-fourth scale from an 18px body, fluid between phone and desktop */
+  --step--1: clamp(0.84rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-1: clamp(1.33rem, 1.2rem + 0.5vw, 1.58rem);
+  --step-2: clamp(1.75rem, 1.5rem + 1vw, 2.1rem);
+  --step-3: clamp(2.3rem, 1.9rem + 1.8vw, 2.8rem);
+  --step-4: clamp(3rem, 2.2rem + 3.6vw, 5rem);
+  --step-5: clamp(4rem, 2.4rem + 7vw, 8.8rem);
+  --step-hero: clamp(6.2rem, 1rem + 21vw, 21rem);
+  --leading-text: 1.55;
+  --leading-tight: 1.15;
+  --leading-display: 0.84;
+  --measure: 64ch;
+
+  /* Space and layout */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2.25rem;
+  --space-7: 3.5rem;
+  --space-8: 5.5rem;
+  --space-9: 8rem;
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+  --page-max: 104rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-quick: 160ms;
+  --dur-move: 420ms;
+}

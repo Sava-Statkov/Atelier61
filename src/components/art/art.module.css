@@ -1,0 +1,190 @@
+.frame {
+  position: relative;
+  width: 100%;
+  background: var(--surface-alt);
+}
+
+/* design1: a painting casts a soft shadow onto the wall below it */
+.frame[data-hung] {
+  box-shadow: var(--shadow-hang);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Unprimed linen: fine warp and weft, the stretcher edge darkened slightly */
+.rawCanvas {
+  display: grid;
+  align-items: end;
+  width: 100%;
+  height: 100%;
+  padding: 0.9em 1em;
+  background-color: var(--placeholder);
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--placeholder-thread) 22%, transparent) 0 1px, transparent 1px 2px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--placeholder-thread) 16%, transparent) 0 1px, transparent 1px 3px),
+    linear-gradient(170deg, color-mix(in srgb, var(--p-light) 30%, transparent), transparent 60%);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--placeholder-ink) 18%, transparent),
+    inset 0 0 1.4rem -0.4rem color-mix(in srgb, var(--placeholder-ink) 28%, transparent);
+  color: var(--placeholder-ink);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  line-height: 1.3;
+}
+
+.rawCanvas span {
+  max-width: 15em;
+}
+
+.card {
+  min-width: 0;
+}
+
+.cardLink {
+  display: block;
+  text-decoration: none;
+}
+
+.cardLink:hover + figcaption .labelTitle,
+.cardLink:focus-visible + figcaption .labelTitle {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
+/* Museum label */
+.label {
+  margin-top: var(--space-4);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.labelTitle {
+  font-family: var(--font-text);
+  font-size: var(--step-0);
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+.label[data-compact] {
+  margin-top: var(--space-2);
+}
+
+.label[data-compact] .labelTitle {
+  font-size: var(--step--1);
+}
+
+.pending {
+  margin-top: var(--space-2);
+  font-style: italic;
+}
+
+/* A small portrait photograph, or its empty frame */
+.portrait {
+  width: min(100%, 19rem);
+}
+
+/* Barely lifted off the wall: a faint contact shadow, much lighter than a hung painting's */
+.portrait img {
+  width: 100%;
+  height: auto;
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--p-ink) 8%, transparent),
+    0 0.6rem 1.4rem -0.9rem color-mix(in srgb, var(--p-ink) 24%, transparent);
+}
+
+.portrait figcaption {
+  margin-top: var(--space-2);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.portraitPending {
+  display: grid;
+  align-items: end;
+  aspect-ratio: 4 / 5;
+  padding: 0.9em 1em;
+  background: linear-gradient(170deg, var(--p-wall-deep), color-mix(in srgb, var(--p-wall-shade) 70%, var(--p-wall-deep)));
+  outline: 1px solid var(--line);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  line-height: 1.3;
+  color: var(--text-muted);
+}
+
+/* Long label on the works page: generous room for facts and a short description */
+.detailed {
+  margin-top: var(--space-5);
+  max-width: 34rem;
+}
+
+.detailedTitle {
+  font-family: var(--font-text);
+  font-size: var(--step-1);
+  font-weight: 650;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.cardLink:hover + figcaption .detailedTitle,
+.cardLink:focus-visible + figcaption .detailedTitle {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
+.detailedFacts {
+  margin-top: var(--space-3);
+  font-family: var(--font-label);
+  font-size: var(--step-0);
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.detailedSeries {
+  margin-top: var(--space-3);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.detailedSummary {
+  margin-top: var(--space-4);
+  max-width: 42ch;
+  line-height: 1.5;
+}
+
+/* Editor-only: where a missing field will go */
+.slot {
+  width: fit-content;
+  min-width: 9em;
+  margin-top: var(--space-1);
+  padding-block: 0.1em;
+  border-bottom: 1px dashed var(--line);
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-subtle);
+}
+
+.slotSummary {
+  width: 100%;
+  max-width: 42ch;
+  min-height: 5.5em;
+  margin-top: var(--space-4);
+  padding: 0.5em 0.7em;
+  border: 1px dashed var(--line);
+}
+
+.caption {
+  margin-top: var(--space-2);
+  max-width: var(--measure);
+  color: var(--text-muted);
+}

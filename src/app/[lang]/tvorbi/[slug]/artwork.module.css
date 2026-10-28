@@ -1,0 +1,93 @@
+.artwork {
+  padding-bottom: var(--space-8);
+}
+
+/* The work gets the wall; its label stands beside it, as in a gallery */
+.view {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-5) var(--gutter) var(--space-8);
+  max-width: var(--page-max);
+  margin-inline: auto;
+}
+
+.image {
+  justify-self: center;
+  width: min(100%, calc(78svh * var(--ratio, 0.8)));
+}
+
+.side {
+  max-width: 30rem;
+}
+
+.side :global(h1) {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 750;
+  line-height: 0.95;
+}
+
+.inspect {
+  margin-top: var(--space-5);
+}
+
+.meta {
+  margin-top: var(--space-5);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.meta ul {
+  margin: var(--space-1) 0 0;
+  padding-left: 1.1em;
+}
+
+.enquiry {
+  margin-top: var(--space-6);
+  font-family: var(--font-label);
+  font-weight: 650;
+}
+
+@media (min-width: 60rem) {
+  .view {
+    grid-template-columns: minmax(0, 8fr) minmax(16rem, 4fr);
+    align-items: end;
+    column-gap: var(--space-7);
+    min-height: calc(100svh - 8rem);
+  }
+
+  .side {
+    padding-bottom: var(--space-4);
+  }
+}
+
+.section {
+  margin-top: var(--space-8);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 750;
+  line-height: 0.95;
+  margin-bottom: var(--space-5);
+}
+
+.storyLinks {
+  padding-left: 1.1em;
+  font-size: var(--step-1);
+}
+
+.related {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related > li {
+  flex: 0 1 calc(var(--ratio) * 11rem);
+}

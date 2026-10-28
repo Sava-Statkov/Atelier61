@@ -1,0 +1,130 @@
+.player {
+  min-width: 0;
+}
+
+/* The screen: 16:9, dark, a faint frame like a projection surface */
+.screen {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 42%, color-mix(in srgb, var(--p-light) 9%, transparent), transparent 70%),
+    var(--surface-alt);
+  outline: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.screen video {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.poster {
+  object-fit: cover;
+}
+
+.status {
+  position: absolute;
+  left: var(--space-5);
+  bottom: var(--space-5);
+  max-width: 26ch;
+  font-family: var(--font-label);
+  font-size: var(--step-1);
+  line-height: 1.25;
+  color: var(--text-muted);
+}
+
+.play {
+  position: absolute;
+  left: var(--space-5);
+  bottom: var(--space-5);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5) var(--space-3) var(--space-4);
+  border: 0;
+  background: var(--p-stage-ink);
+  color: var(--p-stage);
+  font-family: var(--font-label);
+  font-size: var(--step-1);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.playIcon {
+  width: 0;
+  height: 0;
+  border-block: 0.5em solid transparent;
+  border-left: 0.8em solid currentColor;
+}
+
+.hint {
+  margin-top: var(--space-2);
+  font-size: var(--step--1);
+  color: var(--text-subtle);
+}
+
+.subheading {
+  font-family: var(--font-label);
+  font-size: var(--step-0);
+  margin-bottom: var(--space-3);
+}
+
+.chapters {
+  margin-top: var(--space-6);
+}
+
+.chapters ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chapters li + li {
+  margin-top: var(--space-3);
+}
+
+.chapters button {
+  border: 0;
+  padding: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chapters button:disabled {
+  cursor: default;
+}
+
+.time {
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  border: 0;
+  background: none;
+  padding: 0;
+}
+
+.chapterLinks {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.transcript {
+  margin-top: var(--space-6);
+}
+
+.transcript summary {
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-weight: 650;
+}
+
+.transcript div {
+  max-width: var(--measure);
+  margin-top: var(--space-4);
+}
+
+.transcript p + p {
+  margin-top: var(--space-3);
+}

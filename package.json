@@ -1,0 +1,33 @@
+{
+  "name": "rumen-statkov",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "media": "node scripts/media-manifest.mjs",
+    "predev": "npm run media",
+    "dev": "next dev --port 3300",
+    "prebuild": "npm run media",
+    "build": "next build",
+    "start": "next start --port 3300",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "typescript": "^5",
+    "vite": "8.3.4",
+    "vitest": "5.0.3"
+  }
+}

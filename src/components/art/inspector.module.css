@@ -1,0 +1,127 @@
+.open {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  font-family: var(--font-label);
+  font-weight: 650;
+  cursor: zoom-in;
+}
+
+.open:hover {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.details {
+  margin-top: var(--space-5);
+}
+
+.detailsHeading {
+  font-family: var(--font-label);
+  font-weight: 700;
+}
+
+.details ul {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.details button {
+  border: 0;
+  padding: var(--space-1) 0;
+  background: none;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 0.2em;
+  cursor: zoom-in;
+}
+
+/* Viewer: the work alone on a dark ground, nothing else */
+.dialog {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--p-stage);
+  color: var(--p-stage-ink);
+  --focus: var(--p-ochre-light);
+}
+
+.dialog::backdrop {
+  background: var(--p-stage);
+}
+
+.dialog[open] {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--gutter);
+  font-family: var(--font-label);
+}
+
+.toolbar button {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--p-stage-ink) 35%, transparent);
+  background: transparent;
+  color: inherit;
+  font-size: var(--step-0);
+  cursor: pointer;
+}
+
+.help {
+  font-size: var(--step--1);
+  color: var(--p-stage-ink-2);
+  margin-left: var(--space-3);
+}
+
+.close {
+  margin-left: auto;
+}
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  margin: 0 var(--gutter) var(--gutter);
+  touch-action: none;
+  cursor: zoom-in;
+}
+
+.stage[data-zoomed] {
+  cursor: grab;
+}
+
+.stage[data-dragging] {
+  cursor: grabbing;
+}
+
+.stage[data-dragging] .canvas {
+  transition: none;
+}
+
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  transition: transform var(--dur-quick) var(--ease-out);
+  user-select: none;
+}
+
+@media (max-width: 40rem) {
+  .help {
+    display: none;
+  }
+}

@@ -1,0 +1,77 @@
+.years,
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each year is a row: the year as a large numeral that stays in view while its entries scroll */
+.year {
+  display: grid;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: var(--space-5);
+}
+
+.yearLabel {
+  font-family: var(--font-display);
+  font-size: var(--step-5);
+  font-weight: 300;
+  line-height: 0.8;
+  font-variant-numeric: lining-nums;
+}
+
+.year:target .yearLabel {
+  font-weight: 800;
+  color: var(--accent);
+}
+
+@media (min-width: 60rem) {
+  .year {
+    grid-template-columns: minmax(12rem, 4fr) 8fr;
+    column-gap: var(--space-7);
+  }
+
+  .yearLabel {
+    position: sticky;
+    top: var(--space-5);
+    align-self: start;
+  }
+}
+
+.entry + .entry {
+  margin-top: var(--space-6);
+}
+
+.date {
+  font-family: var(--font-label);
+  font-weight: 650;
+  color: var(--text-muted);
+}
+
+.title {
+  margin-top: var(--space-1);
+  max-width: 44ch;
+  font-size: var(--step-1);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* Exhibitions read as titled events, life events as plain statements */
+.entry[data-kind="event"] .title {
+  font-weight: 450;
+}
+
+.place,
+.text,
+.links {
+  margin-top: var(--space-1);
+  max-width: var(--measure);
+  color: var(--text-muted);
+}
+
+.links {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+}
