@@ -1,3 +1,4 @@
+import portrait from "@/assets/photos/rumen-statkov.png";
 import type { Fact, ImageAsset, Localized } from "./types";
 
 /**
@@ -15,25 +16,13 @@ export const site = {
   brandInTitle: false,
   /** Short line under the name on the home page. Plain facts, no slogan. */
   line: { bg: "Български художник. Роден в Бургас." } satisfies Localized,
-  /** Artwork slug shown on the home page wall. */
-  featuredArtwork: "konnik",
   /**
-   * A painting shown on the home page wall in place of the featured artwork, as a photograph only:
-   * no label and no page, because its title, year and technique are not known yet. Once they are,
-   * add it to artworks.ts, point `featuredArtwork` at it and set this back to `null`.
-   */
-  heroImage: {
-    src: "/media/hero/hero-image.jpg",
-    alt: { bg: "Картина на Румен Статков: портрет на мъж с червена кърпа на главата, в позлатена рамка" },
-    rights: "artist",
-  } as ImageAsset | null,
-  /**
-   * Photograph of the artist in "Повече за художника" (file in public/media/photos/, supplied by the family).
+   * Photograph of the artist in "Повече за художника" (file in src/assets/photos/, supplied by the family).
    * Add `credit: "Снимка: …"` once the photographer is known. With `null`, a labelled empty frame
    * stands in its place.
    */
   portrait: {
-    src: "/media/photos/rumen-statkov.png",
+    src: portrait,
     alt: { bg: "Румен Статков" },
     rights: "artist",
   } as ImageAsset | null,

@@ -4,11 +4,9 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./inspector.module.css";
 
-type Region = { x: number; y: number; width: number; height: number };
 type Box = { w: number; h: number };
 type View = { scale: number; x: number; y: number };
 type Size = { width: number; height: number };
-export type InspectorDetail = { id: string; caption: string; region: Region };
 
 const MAX_SCALE = 8;
 const FIT: View = { scale: 1, x: 0, y: 0 };
@@ -28,32 +26,21 @@ function clampView(v: View, image: Size, box: Box): View {
   return { scale: v.scale, x: Math.min(maxX, Math.max(-maxX, v.x)), y: Math.min(maxY, Math.max(-maxY, v.y)) };
 }
 
-/** The view that centres a region and fills most of the stage with it. */
-function regionView(r: Region, image: Size, box: Box): View {
-  const base = fitted(image, box);
-  const scale = clampScale(0.85 * Math.min(box.w / (r.width * base.w), box.h / (r.height * base.h)));
-  const view = { scale, x: (0.5 - (r.x + r.width / 2)) * base.w * scale, y: (0.5 - (r.y + r.height / 2)) * base.h * scale };
-  return clampView(view, image, box);
-}
-
 /**
  * Close inspection of one photograph in a modal dialog: zoom with the wheel, the buttons or + / −,
- * pan by dragging or with the arrow keys, jump to marked details. The full-resolution file is
+ * pan by dragging or with the arrow keys. The full-resolution file is
  * requested only when the dialog opens.
  */
 export function Inspector({
   image,
-  details,
   labels,
 }: {
-  image: { src: string; width: number; height: number; alt: string; blur: string };
-  details: InspectorDetail[];
-  labels: { open: string; close: string; zoomIn: string; zoomOut: string; reset: string; help: string; details: string };
+  image: { src: string; width: number; height: number; alt: string; blur: string | null };
+  labels: { open: string; close: string; zoomIn: string; zoomOut: string; reset: string; help: string };
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; y: number; vx: number; vy: number } | null>(null);
-  const pendingRegion = useRef<Region | null>(null);
   const [open, setOpen] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [box, setBox] = useState<Box>({ w: 0, h: 0 });
@@ -64,17 +51,10 @@ export function Inspector({
     if (!open || !stage.current) return;
     const el = stage.current;
     // ResizeObserver reports the initial size too, so this also runs once on open.
-    const ro = new ResizeObserver(() => {
-      const next = { w: el.clientWidth, h: el.clientHeight };
-      setBox(next);
-      if (pendingRegion.current) {
-        setView(regionView(pendingRegion.current, image, next));
-        pendingRegion.current = null;
-      }
-    });
+    const ro = new ResizeObserver(() => setBox({ w: el.clientWidth, h: el.clientHeight }));
     ro.observe(el);
     return () => ro.disconnect();
-  }, [open, image]);
+  }, [open]);
 
   const zoomAt = (factor: number, px = 0, py = 0) =>
     setView((v) => {
@@ -84,15 +64,13 @@ export function Inspector({
       return clampView({ scale, x: px - (px - v.x) * k, y: py - (py - v.y) * k }, image, box);
     });
 
-  const show = (region?: Region) => {
+  const show = () => {
     if (!dialog.current?.open) dialog.current?.showModal();
     // The dialog is laid out as soon as it is open, so the stage can be measured right here;
     // the ResizeObserver above only follows later changes (rotation, window resize).
     const el = stage.current;
-    const measured = el ? { w: el.clientWidth, h: el.clientHeight } : box;
-    setBox(measured);
-    setView(region && measured.w ? regionView(region, image, measured) : FIT);
-    pendingRegion.current = region && !measured.w ? region : null;
+    if (el) setBox({ w: el.clientWidth, h: el.clientHeight });
+    setView(FIT);
     setOpen(true);
   };
 
@@ -128,20 +106,6 @@ export function Inspector({
       <button type="button" className={styles.open} onClick={() => show()}>
         {labels.open}
       </button>
-      {details.length > 0 && (
-        <div className={styles.details}>
-          <p className={styles.detailsHeading}>{labels.details}</p>
-          <ul>
-            {details.map((d) => (
-              <li key={d.id}>
-                <button type="button" onClick={() => show(d.region)}>
-                  {d.caption}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       <dialog ref={dialog} className={styles.dialog} aria-label={image.alt} onClose={() => setOpen(false)} onKeyDown={onKey}>
         <div className={styles.toolbar}>
@@ -202,8 +166,8 @@ export function Inspector({
                 sizes={`${Math.min(3, Math.ceil(view.scale)) * 100}vw`}
                 quality={90}
                 loading="eager"
-                placeholder="blur"
-                blurDataURL={image.blur}
+                placeholder={image.blur ? "blur" : "empty"}
+                blurDataURL={image.blur ?? undefined}
                 draggable={false}
               />
             </div>

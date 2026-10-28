@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
-import { series } from "./src/content/series";
-import { seriesPath } from "./src/lib/paths";
+
+// Photographs of the works are served from Supabase Storage (public bucket "artworks").
+const supabase = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321");
+const isLocalSupabase = ["127.0.0.1", "localhost"].includes(supabase.hostname);
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -22,15 +24,29 @@ const nextConfig: NextConfig = {
     // 75 for thumbnails, 90 for the artwork view and close inspection.
     qualities: [75, 90],
     deviceSizes: [640, 828, 1080, 1440, 1920, 2560, 3200],
+    remotePatterns: [
+      {
+        protocol: supabase.protocol.replace(":", "") as "http" | "https",
+        hostname: supabase.hostname,
+        port: supabase.port,
+        pathname: "/storage/v1/object/public/artworks/**",
+      },
+    ],
+    // A photograph never changes under its address (the file name is its SHA-256), so the resized
+    // versions can be kept for a month.
+    minimumCacheTTL: 2678400,
+    // Only for the local Supabase in Docker, which runs on this machine.
+    dangerouslyAllowLocalIP: isLocalSupabase,
   },
   // Bulgarian is served without a prefix: /tvorbi is rendered by app/[lang]/tvorbi with lang = "bg".
-  // Other locales keep their prefix (/en/...) and are enabled in src/i18n/config.ts.
+  // Other locales keep their prefix (/en/...) and are enabled in src/i18n/config.ts. The admin is not
+  // localised and keeps its own address.
   async rewrites() {
     return {
       beforeFiles: [],
       afterFiles: [
         { source: "/", destination: "/bg" },
-        { source: "/:first((?!bg$|en$)[^/.]+)/:rest*", destination: "/bg/:first/:rest*" },
+        { source: "/:first((?!bg$|en$|admin$)[^/.]+)/:rest*", destination: "/bg/:first/:rest*" },
       ],
       fallback: [],
     };
@@ -39,10 +55,6 @@ const nextConfig: NextConfig = {
     return [
       { source: "/bg", destination: "/", permanent: true },
       { source: "/bg/:path*", destination: "/:path*", permanent: true },
-      // Practices used to live under /cikli/; send old links to their own address.
-      ...series
-        .filter((s) => s.kind === "practice")
-        .map((s) => ({ source: `/cikli/${s.slug}`, destination: seriesPath(s), permanent: true })),
     ];
   },
   async headers() {

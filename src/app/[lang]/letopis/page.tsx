@@ -8,7 +8,9 @@ import { T } from "@/components/text/T";
 import { href, isEnabledLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { makeCitations, type Citations } from "@/lib/citations";
-import { getArtwork, getChronicle, getSeries, type ChronicleEntry } from "@/lib/content";
+import { nameOf } from "@/lib/artworks/map";
+import { getArtwork, getSeries } from "@/lib/artworks/queries";
+import { getChronicle, type ChronicleEntry } from "@/lib/content";
 import type { DateRange, PartialDate } from "@/content/types";
 import { formatDate, isRange, yearOf } from "@/lib/dates";
 import { seriesPath } from "@/lib/paths";
@@ -24,13 +26,17 @@ function isBareYear(d: PartialDate | DateRange) {
   return !isRange(d) ? !d.month && !d.approximate : !d.end && !d.start.month && !d.start.approximate;
 }
 
-function Entry({ entry, locale, cites }: { entry: ChronicleEntry; locale: Locale; cites: Citations }) {
+async function Entry({ entry, locale, cites }: { entry: ChronicleEntry; locale: Locale; cites: Citations }) {
   const record = entry.kind === "event" ? entry.event : entry.exhibition;
   const seriesSlugs = record.series ?? [];
   const artworkSlugs = entry.kind === "event" ? entry.event.artworks ?? [] : entry.exhibition.artworks ?? [];
   const links = [
-    ...seriesSlugs.map(getSeries).filter((s) => s !== undefined).map((s) => ({ href: href(locale, seriesPath(s)), title: s.title })),
-    ...artworkSlugs.map(getArtwork).filter((a) => a !== undefined).map((a) => ({ href: href(locale, `/tvorbi/${a.slug}`), title: a.title })),
+    ...(await Promise.all(seriesSlugs.map(getSeries)))
+      .filter((s) => s !== undefined)
+      .map((s) => ({ href: href(locale, seriesPath(s)), title: s.title })),
+    ...(await Promise.all(artworkSlugs.map(getArtwork)))
+      .filter((a) => a !== null)
+      .map((a) => ({ href: href(locale, `/tvorbi/${a.slug}`), title: nameOf(a) })),
   ];
 
   return (

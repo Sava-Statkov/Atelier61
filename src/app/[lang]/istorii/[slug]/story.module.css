@@ -14,10 +14,6 @@
   line-height: 0.9;
 }
 
-.detail {
-  max-width: 40rem;
-}
-
 .title {
   margin-top: var(--space-7);
   max-width: 30ch;

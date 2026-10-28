@@ -67,6 +67,8 @@ create table public.artworks (
   note text,
   sort_order bigint not null default nextval('public.artworks_sort_order_seq'),
   published boolean not null default false,
+  -- the work on the home page wall, beside the name; at most one (index below)
+  on_home boolean not null default false,
   created_at timestamptz not null default now(),
   -- deferred, so that reorder_artworks can swap positions in one statement
   constraint artworks_sort_order_key unique (sort_order) deferrable initially deferred
@@ -101,6 +103,7 @@ create table public.artwork_images (
 );
 
 create index artworks_published_order_idx on public.artworks (published, sort_order, id);
+create unique index artworks_on_home_key on public.artworks (on_home) where on_home;
 create index artworks_category_id_idx on public.artworks (category_id);
 create index artworks_cycle_id_idx on public.artworks (cycle_id);
 create index artwork_images_artwork_order_idx on public.artwork_images (artwork_id, sort_order);
@@ -167,7 +170,7 @@ revoke all on table public.categories, public.cycles, public.artworks, public.ar
 grant select on table public.categories, public.cycles to anon;
 grant select (
   id, title, slug, category_id, cycle_id, year, technique, description,
-  height_cm, width_cm, depth_cm, sources, sort_order, published, created_at
+  height_cm, width_cm, depth_cm, sources, sort_order, published, on_home, created_at
 ) on table public.artworks to anon;
 grant select (
   id, artwork_id, storage_path, width, height, sort_order, alt, rights, credit, blur_data_url

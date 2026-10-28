@@ -1,0 +1,191 @@
+/* ---------- Filters ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-7);
+}
+
+.filters[aria-busy] {
+  cursor: progress;
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.group legend {
+  float: left;
+  margin-right: var(--space-3);
+  font-family: var(--font-label);
+  font-weight: 700;
+}
+
+.chip {
+  position: relative;
+  font-family: var(--font-label);
+  cursor: pointer;
+}
+
+.chip input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.chip span {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--line);
+}
+
+.chip input:checked + span {
+  background: var(--text);
+  color: var(--surface);
+  border-color: var(--text);
+}
+
+.chip input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.count {
+  margin-block: var(--space-5) var(--space-6);
+  font-family: var(--font-label);
+  color: var(--text-muted);
+}
+
+.empty a {
+  margin-left: 0.3em;
+}
+
+/* ---------- The representative work of the cycle being shown ---------- */
+.lead {
+  display: grid;
+  gap: var(--space-5) var(--space-7);
+  margin-block: var(--space-6) var(--space-8);
+}
+
+.leadWork > figure {
+  /* never taller than about three quarters of the screen */
+  width: min(100%, calc(var(--ratio, 0.8) * 75svh));
+}
+
+.leadTitle {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.leadSummary {
+  margin-top: var(--space-4);
+  max-width: 36ch;
+  font-size: var(--step-1);
+  line-height: 1.4;
+}
+
+.leadMore {
+  margin-top: var(--space-4);
+  font-family: var(--font-label);
+  font-weight: 650;
+}
+
+@media (min-width: 60rem) {
+  .lead {
+    grid-template-columns: 7fr 5fr;
+    align-items: end;
+  }
+}
+
+/*
+ * ---------- Masonry ----------
+ * Equal columns; each holds its works one under another (placement in src/lib/masonry.ts).
+ * Before the browser knows its width, the page holds one layout per column count and shows the one
+ * for the screen; the breakpoints mirror COLUMN_STEPS there.
+ */
+.layout {
+  display: none;
+}
+
+@media (max-width: 39.999rem) {
+  .layout[data-columns="2"] {
+    display: block;
+  }
+}
+
+@media (min-width: 40rem) and (max-width: 59.999rem) {
+  .layout[data-columns="3"] {
+    display: block;
+  }
+}
+
+@media (min-width: 60rem) {
+  .layout[data-columns="4"] {
+    display: block;
+  }
+}
+
+.columns {
+  --gap: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  align-items: start;
+  column-gap: var(--gap);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+@media (min-width: 40rem) {
+  .columns {
+    --gap: var(--space-5);
+  }
+
+  .column {
+    gap: var(--space-7);
+  }
+}
+
+/* Narrow phone columns: a smaller label */
+@media (max-width: 39.999rem) {
+  .column figcaption {
+    font-size: 0.9em;
+  }
+}
+
+.more {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-7) var(--space-9);
+  font-family: var(--font-label);
+  color: var(--text-muted);
+}
+
+.more button {
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  font: inherit;
+  font-weight: 650;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.more button:hover {
+  background: var(--text);
+  color: var(--surface);
+}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArtworkImage } from "@/components/art/ArtworkImage";
 import { EditorNote } from "@/components/editor/Badge";
 import { Blocks } from "@/components/text/Blocks";
 import { Quote } from "@/components/text/Quote";
@@ -10,7 +9,9 @@ import { T } from "@/components/text/T";
 import { href, isEnabledLocale, text, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { makeCitations, sourceIds, type Citations } from "@/lib/citations";
-import { getArtwork, getQuote, getSeries, getStories, getStory } from "@/lib/content";
+import { nameOf } from "@/lib/artworks/map";
+import { getArtwork, getSeries } from "@/lib/artworks/queries";
+import { getQuote, getStories, getStory } from "@/lib/content";
 import { seriesPath } from "@/lib/paths";
 import type { Story } from "@/content/types";
 import styles from "./story.module.css";
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/istorii/[s
   return { title: text(s.title, lang), description: s.lead ? text(s.lead, lang) : undefined };
 }
 
-/** The story begins where the curiosity begins: a question, a detail of a work, a quote. */
+/** The story begins where the curiosity begins: a question or a quote. */
 function Opening({ story, locale, cites }: { story: Story; locale: Locale; cites: Citations }) {
   const o = story.opening;
   if (o.kind === "question") {
@@ -41,14 +42,6 @@ function Opening({ story, locale, cites }: { story: Story; locale: Locale; cites
   if (o.kind === "quote") {
     const q = getQuote(o.quote);
     return q ? <Quote quote={q} locale={locale} cites={cites} size="l" /> : null;
-  }
-  if (o.kind === "detail") {
-    const a = getArtwork(o.artwork);
-    return a ? (
-      <div className={styles.detail}>
-        <ArtworkImage artwork={a} locale={locale} sizes="(min-width: 60rem) 50vw, 100vw" />
-      </div>
-    ) : null;
   }
   return null;
 }
@@ -69,8 +62,8 @@ export default async function StoryPage({ params }: PageProps<"/[lang]/istorii/[
     bodyQuotes,
     sourceIds(story),
   );
-  const series = (story.series ?? []).map(getSeries).filter((s) => s !== undefined);
-  const works = (story.artworks ?? []).map(getArtwork).filter((a) => a !== undefined);
+  const series = (await Promise.all((story.series ?? []).map(getSeries))).filter((s) => s !== undefined);
+  const works = (await Promise.all((story.artworks ?? []).map(getArtwork))).filter((a) => a !== null);
 
   return (
     <article className={`page ${styles.story}`}>
@@ -103,7 +96,7 @@ export default async function StoryPage({ params }: PageProps<"/[lang]/istorii/[
               {works.map((a) => (
                 <li key={a.slug}>
                   <Link href={href(lang, `/tvorbi/${a.slug}`)}>
-                    <T value={a.title} locale={lang} />
+                    <T value={nameOf(a)} locale={lang} />
                   </Link>
                 </li>
               ))}

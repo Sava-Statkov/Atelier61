@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { ViewTransition } from "react";
-import type { Artwork } from "@/content/types";
 import { text, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { mainImage, ratioOf } from "@/lib/artwork";
+import { ratioOf } from "@/lib/artworks/map";
+import type { Artwork } from "@/lib/artworks/types";
 import { RawCanvas } from "./RawCanvas";
 import styles from "./art.module.css";
 
@@ -21,22 +21,28 @@ type Props = {
   quality?: 75 | 90;
 };
 
+/** What a photograph of the work shows; without a description, the title or a plain "a work by". */
+export function photoAlt(artwork: Artwork, locale: Locale): string {
+  const photo = artwork.photos[0];
+  if (photo?.alt) return photo.alt;
+  return artwork.title ? text(artwork.title, locale) : getDictionary(locale).artwork.untitled;
+}
+
 export function ArtworkImage({ artwork, locale, sizes, eager, hung = true, morph = false, quality = 75 }: Props) {
-  const image = mainImage(artwork);
+  const photo = artwork.photos[0];
   const ratio = ratioOf(artwork);
-  const content = image ? (
+  const content = photo ? (
     <Image
-      src={image.src}
-      width={image.width}
-      height={image.height}
-      alt={text(image.alt, locale)}
+      src={photo.url}
+      width={photo.width}
+      height={photo.height}
+      alt={photoAlt(artwork, locale)}
       sizes={sizes}
       quality={quality}
       loading={eager ? "eager" : undefined}
       fetchPriority={eager ? "high" : undefined}
-      placeholder="blur"
-      blurDataURL={image.blur}
-      style={{ backgroundColor: image.color }}
+      placeholder={photo.blur ? "blur" : "empty"}
+      blurDataURL={photo.blur ?? undefined}
       className={styles.image}
     />
   ) : (

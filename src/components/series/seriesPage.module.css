@@ -44,6 +44,14 @@
   max-width: none;
 }
 
+/* The link to all works of the cycle on the works page, under the hang */
+.allWorks {
+  margin-top: var(--space-6);
+  font-family: var(--font-label);
+  font-size: var(--step-1);
+  font-weight: 650;
+}
+
 .body {
   display: grid;
   gap: var(--space-7);

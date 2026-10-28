@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { ArtworkCard } from "@/components/art/ArtworkCard";
-import { WorksExplorer, type ExplorerItem } from "@/components/art/WorksExplorer";
-import type { Medium } from "@/content/types";
-import { isEnabledLocale, text } from "@/i18n/config";
+import { Gallery } from "@/components/gallery/Gallery";
+import { GalleryFilters } from "@/components/gallery/GalleryFilters";
+import { GalleryLead } from "@/components/gallery/GalleryLead";
+import { href, isEnabledLocale, text } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { ratioOf } from "@/lib/artwork";
-import { getArtworks, getSeriesList } from "@/lib/content";
-import { sortKey } from "@/lib/dates";
-import { hangStyle } from "@/lib/hang";
-import explorer from "@/components/art/explorer.module.css";
+import { countArtworks, getArtworkById, getCategories, getGalleryPage, getSeriesList, getUsedTerms } from "@/lib/artworks/queries";
+import gallery from "@/components/gallery/gallery.module.css";
 import styles from "../pages.module.css";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/tvorbi">): Promise<Metadata> {
@@ -18,62 +15,74 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/tvorbi">):
   return isEnabledLocale(lang) ? { title: getDictionary(lang).nav.works } : {};
 }
 
-export default async function WorksPage({ params }: PageProps<"/[lang]/tvorbi">) {
+const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? "";
+
+/** All published works, or those of one category and/or cycle (?kategoriya=…&cikal=…). */
+export default async function WorksPage({ params, searchParams }: PageProps<"/[lang]/tvorbi">) {
   const { lang } = await params;
   if (!isEnabledLocale(lang)) notFound();
   const t = getDictionary(lang);
+  const search = await searchParams;
 
-  // Dated works first, oldest to newest; undated works keep their order from artworks.ts.
-  const works = getArtworks()
-    .map((a, i) => ({ a, i }))
-    .sort((x, y) => sortKey(x.a.date) - sortKey(y.a.date) || x.i - y.i)
-    .map(({ a }) => a);
+  const [categories, seriesList, used] = await Promise.all([getCategories(), getSeriesList(), getUsedTerms()]);
+  const category = categories.find((c) => c.slug === first(search.kategoriya));
+  const series = seriesList.find((s) => s.slug === first(search.cikal));
 
-  const items: ExplorerItem[] = works.map((a) => ({
-    slug: a.slug,
-    series: a.series ?? [],
-    media: a.media ?? [],
-    ratio: ratioOf(a),
-    node: <ArtworkCard artwork={a} locale={lang} size="wall" label="detailed" morph />,
-  }));
+  // The cycle's representative work leads its view, if it is published and fits the filters.
+  const featured = series?.featuredArtworkId ? await getArtworkById(series.featuredArtworkId) : null;
+  const lead = featured && featured.cycle?.id === series?.id && (!category || featured.category?.id === category.id) ? featured : null;
 
-  const usedSeries = new Set(works.flatMap((a) => a.series ?? []));
-  const usedMedia = new Set(works.flatMap((a) => a.media ?? []));
-  const seriesOptions = getSeriesList()
-    .filter((s) => usedSeries.has(s.slug))
-    .map((s) => ({ value: s.slug, label: text(s.title, lang) }));
-  const mediaOptions = (Object.keys(t.media) as Medium[]).filter((m) => usedMedia.has(m)).map((m) => ({ value: m, label: t.media[m] }));
+  const filter = { categoryId: category?.id ?? null, cycleId: series?.id ?? null };
+  const query = { ...filter, excludeId: lead?.id ?? null };
+  const [page, total] = await Promise.all([getGalleryPage(query), countArtworks(filter)]);
 
-  const labels = {
-    all: t.explorer.all,
-    bySeries: t.explorer.bySeries,
-    byMedium: t.explorer.byMedium,
-    empty: t.explorer.empty,
-    reset: t.explorer.reset,
-    count: t.explorer.count,
-  };
+  const active = { kategoriya: category?.slug ?? "", cikal: series?.slug ?? "" };
+  const filterKey = `${active.kategoriya}|${active.cikal}`;
 
   return (
     <div className="page">
       <header className={styles.intro}>
         <h1 className={styles.pageTitle}>{t.nav.works}</h1>
       </header>
-      {/* useSearchParams needs a Suspense boundary; the fallback is the same hang, unfiltered.
-          It leaves out the morph names, so revealing the filtered list does not pair them up and
-          start a page-wide view transition. */}
-      <Suspense
-        fallback={
-          <ul className={explorer.wall}>
-            {works.map((a, index) => (
-              <li key={a.slug} style={hangStyle(index, ratioOf(a))}>
-                <ArtworkCard artwork={a} locale={lang} size="wall" label="detailed" />
-              </li>
-            ))}
-          </ul>
-        }
-      >
-        <WorksExplorer items={items} series={seriesOptions} media={mediaOptions} labels={labels} />
-      </Suspense>
+
+      <GalleryFilters
+        key={`filters-${filterKey}`}
+        active={active}
+        allLabel={t.explorer.all}
+        groups={[
+          {
+            key: "kategoriya",
+            legend: t.explorer.byCategory,
+            options: categories.filter((c) => used.categoryIds.includes(c.id)).map((c) => ({ value: c.slug, label: c.name })),
+          },
+          {
+            key: "cikal",
+            legend: t.explorer.bySeries,
+            options: seriesList.filter((s) => used.cycleIds.includes(s.id)).map((s) => ({ value: s.slug, label: text(s.title, lang) })),
+          },
+        ]}
+      />
+
+      <p className={gallery.count} role="status">
+        {(total === 1 ? t.explorer.count.one : t.explorer.count.many).replace("{n}", String(total))}
+      </p>
+
+      {lead && series && <GalleryLead artwork={lead} series={series} locale={lang} toSeries={t.explorer.toSeries} />}
+
+      {total > 0 ? (
+        <Gallery
+          key={`gallery-${filterKey}`}
+          locale={lang}
+          initial={page}
+          query={query}
+          labels={{ more: t.explorer.more, loading: t.explorer.loading, failed: t.explorer.failed, list: t.nav.works }}
+        />
+      ) : (
+        <p className={gallery.empty}>
+          {t.explorer.empty}
+          <Link href={href(lang, "/tvorbi")}>{t.explorer.reset}</Link>
+        </p>
+      )}
     </div>
   );
 }

@@ -50,14 +50,6 @@
   display: block;
 }
 
-/* The hero painting, photographed in its frame and hung on the wall like the works */
-.heroImage {
-  display: block;
-  width: 100%;
-  height: auto;
-  box-shadow: var(--shadow-hang);
-}
-
 .line {
   grid-row: 3;
   margin-top: var(--space-6);

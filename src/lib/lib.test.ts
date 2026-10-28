@@ -13,8 +13,9 @@ describe("publishing rules", () => {
   });
 
   it("never publishes images of unknown provenance", () => {
-    expect(isImagePublishable({ src: "/a.jpg", alt: { bg: "" }, rights: "unknown" })).toBe(false);
-    expect(isImagePublishable({ src: "/a.jpg", alt: { bg: "" }, rights: "artist" })).toBe(true);
+    const src = { src: "/a.jpg", width: 4, height: 5 };
+    expect(isImagePublishable({ src, alt: { bg: "" }, rights: "unknown" })).toBe(false);
+    expect(isImagePublishable({ src, alt: { bg: "" }, rights: "artist" })).toBe(true);
   });
 });
 

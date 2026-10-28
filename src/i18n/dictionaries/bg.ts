@@ -15,7 +15,6 @@ export const bg = {
     stories: "Истории",
     about: "Повече за художника",
     portraitPending: "Снимка на Румен Статков — предстои",
-    heroDetailsPending: "Заглавие, година и техника на картината — предстоят.",
     toSeries: "Към цикъла",
     toPractice: "Към страницата",
     allWorks: "Всички творби",
@@ -24,13 +23,15 @@ export const bg = {
   },
   artwork: {
     photoPending: "Снимката на творбата предстои",
+    /** Stands in for the title while it is not known; never presented as the title itself. */
+    untitled: "Творба на Румен Статков",
+    allInSeries: "Всички творби от цикъла ({n})",
     inspect: "Разгледай отблизо",
     close: "Затвори",
     zoomIn: "Увеличи",
     zoomOut: "Намали",
     reset: "Цял изглед",
     inspectHelp: "Плъзнете или използвайте стрелките, за да се движите. + и − променят мащаба.",
-    details: "Детайли",
     exhibitions: "Показвана в",
     related: "Свързани творби",
     stories: "Истории за творбата",
@@ -39,13 +40,6 @@ export const bg = {
     enquirySubject: "Запитване за",
   },
   label: {
-    technique: "Техника",
-    date: "Година",
-    dimensions: "Размер",
-    collection: "Собственост",
-    series: "Цикъл",
-    seriesMany: "Цикли",
-    summary: "Кратко описание, 1 до 3 изречения",
     undated: "Без точна дата",
     approximately: "около",
     until: "до",
@@ -55,7 +49,6 @@ export const bg = {
     sourced: "По публикация",
     unconfirmed: "За проверка",
     placeholder: "Работно място",
-    pendingFields: "Непотвърдени полета",
     editorNote: "Бележка за редакцията",
   },
   voice: {
@@ -82,11 +75,15 @@ export const bg = {
   },
   explorer: {
     all: "Всички",
+    byCategory: "Категория",
     bySeries: "Цикъл",
-    byMedium: "Техника",
     count: { one: "{n} творба", many: "{n} творби" },
     empty: "Няма творби с тези филтри.",
     reset: "Покажи всички",
+    more: "Покажи още",
+    loading: "Зареждат се още творби…",
+    failed: "Следващите творби не се заредиха.",
+    toSeries: "Към цикъла",
   },
   chronicle: {
     title: "Летопис",
@@ -117,7 +114,6 @@ export const bg = {
     sources: "Източници",
   },
   editor: {
-    slot: "{label} — предстои",
     editorial: {
       draft: "Чернова — не се публикува.",
       review: "Чака преглед от художника — не се публикува.",
@@ -125,18 +121,6 @@ export const bg = {
     },
   },
   months: ["януари", "февруари", "март", "април", "май", "юни", "юли", "август", "септември", "октомври", "ноември", "декември"],
-  media: {
-    oil: "масло",
-    watercolour: "акварел",
-    ink: "туш и перо",
-    graphic: "графика",
-    glass: "стъклопис",
-    caricature: "шарж",
-    drawing: "рисунка",
-    mixed: "смесена техника",
-    "set-design": "сценография",
-    illustration: "илюстрация",
-  },
 };
 
 export type Dictionary = typeof bg;

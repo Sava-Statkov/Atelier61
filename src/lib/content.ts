@@ -1,44 +1,18 @@
-import { artworks, placeholderArtworks } from "@/content/artworks";
 import { exhibitions } from "@/content/exhibitions";
 import { films } from "@/content/films";
 import { quotes } from "@/content/quotes";
-import { series } from "@/content/series";
 import { sources } from "@/content/sources";
 import { stories } from "@/content/stories";
 import { timeline } from "@/content/timeline";
-import type { Artwork, DateRange, Exhibition, LifeEvent, PartialDate, Story } from "@/content/types";
+import type { DateRange, Exhibition, LifeEvent, PartialDate, Story } from "@/content/types";
 import { sortKey } from "./dates";
-import { contentMode, isImagePublishable, isVisible, visible } from "./publish";
+import { contentMode, isVisible, visible } from "./publish";
 
 /**
- * The only way pages read content. Everything returned here has already passed the publishing
- * rules, so components never need to check verification themselves.
+ * The only way pages read the editorial content (src/content). Everything returned here has already
+ * passed the publishing rules, so components never need to check verification themselves.
+ * Works, their photographs and the cycles come from the database: see src/lib/artworks/queries.ts.
  */
-
-function withPublicImages(a: Artwork): Artwork {
-  return contentMode === "all" ? a : { ...a, images: a.images.filter(isImagePublishable) };
-}
-
-export function getArtworks(): Artwork[] {
-  const list = contentMode === "all" ? [...artworks, ...placeholderArtworks] : artworks;
-  return visible(list).map(withPublicImages);
-}
-
-export function getArtwork(slug: string): Artwork | undefined {
-  return getArtworks().find((a) => a.slug === slug);
-}
-
-export function getSeriesList() {
-  return visible(series);
-}
-
-export function getSeries(slug: string) {
-  return getSeriesList().find((s) => s.slug === slug);
-}
-
-export function getArtworksInSeries(slug: string): Artwork[] {
-  return getArtworks().filter((a) => a.series?.includes(slug));
-}
 
 export function getQuote(id: string) {
   const q = quotes.find((x) => x.id === id);
@@ -104,12 +78,9 @@ export function getChronicle(): ChronicleEntry[] {
   return entries.sort((a, b) => sortKey(a.date) - sortKey(b.date));
 }
 
-/** Works that share a series with this one, excluding itself. */
-export function getRelatedArtworks(a: Artwork, limit = 6): Artwork[] {
-  const explicit = (a.related ?? []).map(getArtwork).filter((x): x is Artwork => Boolean(x));
-  const bySeries = getArtworks().filter((o) => o.slug !== a.slug && o.series?.some((s) => a.series?.includes(s)));
-  const seen = new Set<string>();
-  return [...explicit, ...bySeries].filter((x) => (seen.has(x.slug) ? false : (seen.add(x.slug), true))).slice(0, limit);
+/** Exhibitions in which a work (by slug) was shown. */
+export function getExhibitionsOf(artworkSlug: string): Exhibition[] {
+  return getExhibitions().filter((e) => e.artworks?.includes(artworkSlug));
 }
 
 /** Collects the source ids cited by any set of records, in first-seen order. */

@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { artworks, placeholderArtworks } from "./artworks";
 import { exhibitions } from "./exhibitions";
 import { films } from "./films";
 import { quotes } from "./quotes";
@@ -11,18 +10,17 @@ import { timeline } from "./timeline";
 import type { Verification } from "./types";
 
 /**
- * Content integrity: every reference points to something that exists, and nothing marked as
- * published lacks a source. Run with `npm test` after editing content.
+ * Integrity of the editorial content: every reference points to something that exists, and nothing
+ * marked as published lacks a source. Run with `npm test` after editing content. References to works
+ * (by slug) point into the database and are checked by `npm run check:refs`.
  */
 const sourceIds = new Set(sources.map((s) => s.id));
-const artworkSlugs = new Set([...artworks, ...placeholderArtworks].map((a) => a.slug));
 const seriesSlugs = new Set(series.map((s) => s.slug));
 const exhibitionIds = new Set(exhibitions.map((e) => e.id));
 const quoteIds = new Set(quotes.map((q) => q.id));
 const storySlugs = new Set(stories.map((s) => s.slug));
 
 const verifications: Array<[string, Verification]> = [
-  ...artworks.map((a) => [`artwork ${a.slug}`, a.verification] as [string, Verification]),
   ...series.map((s) => [`series ${s.slug}`, s.verification] as [string, Verification]),
   ...series.flatMap((s) => (s.facts ?? []).map((f, i) => [`series ${s.slug} fact ${i}`, f.verification] as [string, Verification])),
   ...exhibitions.map((e) => [`exhibition ${e.id}`, e.verification] as [string, Verification]),
@@ -37,7 +35,6 @@ const unique = (list: string[]) => list.length === new Set(list).size;
 
 describe("content", () => {
   it("has unique ids and slugs", () => {
-    expect(unique([...artworks, ...placeholderArtworks].map((a) => a.slug))).toBe(true);
     expect(unique(series.map((s) => s.slug))).toBe(true);
     expect(unique(exhibitions.map((e) => e.id))).toBe(true);
     expect(unique(timeline.map((e) => e.id))).toBe(true);
@@ -47,7 +44,8 @@ describe("content", () => {
   });
 
   it("uses URL-safe slugs", () => {
-    for (const slug of [...artworkSlugs, ...seriesSlugs, ...storySlugs]) expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    for (const slug of [...seriesSlugs, ...storySlugs]) expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    for (const e of [...exhibitions, ...timeline]) for (const a of e.artworks ?? []) expect(a).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
   });
 
   it("cites only known sources, and every sourced record cites at least one", () => {
@@ -59,32 +57,20 @@ describe("content", () => {
   });
 
   it("references existing records", () => {
-    for (const a of [...artworks, ...placeholderArtworks]) {
-      for (const s of a.series ?? []) expect(seriesSlugs.has(s), `artwork ${a.slug} → series ${s}`).toBe(true);
-      for (const e of a.exhibitions ?? []) expect(exhibitionIds.has(e), `artwork ${a.slug} → exhibition ${e}`).toBe(true);
-      for (const r of a.related ?? []) expect(artworkSlugs.has(r), `artwork ${a.slug} → related ${r}`).toBe(true);
-    }
     for (const s of series) {
       for (const q of s.quotes ?? []) expect(quoteIds.has(q), `series ${s.slug} → quote ${q}`).toBe(true);
       for (const e of s.exhibitions ?? []) expect(exhibitionIds.has(e), `series ${s.slug} → exhibition ${e}`).toBe(true);
-      if (s.cover) expect(artworkSlugs.has(s.cover), `series ${s.slug} → cover ${s.cover}`).toBe(true);
     }
     for (const e of [...timeline, ...exhibitions]) {
       for (const s of e.series ?? []) expect(seriesSlugs.has(s), `${e.id} → series ${s}`).toBe(true);
-      for (const a of e.artworks ?? []) expect(artworkSlugs.has(a), `${e.id} → artwork ${a}`).toBe(true);
     }
     for (const st of stories) {
       for (const b of st.body) {
         if (b.type === "quote") expect(quoteIds.has(b.quote), `story ${st.slug} → quote ${b.quote}`).toBe(true);
-        if (b.type === "artwork") expect(artworkSlugs.has(b.slug), `story ${st.slug} → artwork ${b.slug}`).toBe(true);
         if (b.type === "p") for (const id of b.sources ?? []) expect(sourceIds.has(id)).toBe(true);
       }
       if (st.opening.kind === "quote") expect(quoteIds.has(st.opening.quote)).toBe(true);
     }
   });
 
-  it("keeps placeholders out of the real catalogue", () => {
-    for (const a of artworks) expect(a.verification.status).not.toBe("placeholder");
-    for (const a of placeholderArtworks) expect(a.verification.status).toBe("placeholder");
-  });
 });

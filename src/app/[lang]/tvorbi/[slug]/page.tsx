@@ -1,59 +1,68 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArtworkCard } from "@/components/art/ArtworkCard";
-import { ArtworkImage } from "@/components/art/ArtworkImage";
+import { ArtworkImage, photoAlt } from "@/components/art/ArtworkImage";
 import { Inspector } from "@/components/art/Inspector";
 import { WallLabel } from "@/components/art/WallLabel";
-import { EditorNote } from "@/components/editor/Badge";
 import { Blocks } from "@/components/text/Blocks";
 import { SourceList } from "@/components/text/SourceList";
 import { T } from "@/components/text/T";
+import type { Block } from "@/content/types";
 import { site } from "@/content/site";
 import { href, isEnabledLocale, text } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { mainImage, ratioOf } from "@/lib/artwork";
+import { nameOf, ratioOf } from "@/lib/artworks/map";
+import { getArtwork, getPublishedSlugs, getRelatedArtworks, getSeries } from "@/lib/artworks/queries";
 import { makeCitations, sourceIds } from "@/lib/citations";
-import { getArtwork, getArtworks, getExhibition, getRelatedArtworks, getSeries, getStoriesFor } from "@/lib/content";
+import { getExhibitionsOf, getStoriesFor } from "@/lib/content";
 import { formatDate } from "@/lib/dates";
-import { isVisible } from "@/lib/publish";
 import { seriesPath } from "@/lib/paths";
 import styles from "./artwork.module.css";
 
-export const dynamicParams = false;
+// Works published after the build get their page on the first visit.
+export const dynamicParams = true;
 
 // Called once per locale from the [lang] layout's params.
-export function generateStaticParams() {
-  return getArtworks().map((a) => ({ slug: a.slug }));
+export async function generateStaticParams() {
+  return (await getPublishedSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/tvorbi/[slug]">): Promise<Metadata> {
   const { lang, slug } = await params;
-  const a = isEnabledLocale(lang) ? getArtwork(slug) : undefined;
+  const a = isEnabledLocale(lang) ? await getArtwork(slug) : null;
   if (!a || !isEnabledLocale(lang)) return {};
-  const image = mainImage(a);
-  const technique = a.technique ? text(a.technique, lang) : undefined;
+  const photo = a.photos[0];
+  const title = text(nameOf(a), lang);
   return {
-    title: text(a.title, lang),
-    description: [text(a.title, lang), technique, text(site.name, lang)].filter(Boolean).join(", "),
-    openGraph: image ? { images: [{ url: image.src, width: image.width, height: image.height, alt: text(image.alt, lang) }] } : undefined,
+    title,
+    description: [title, a.technique && text(a.technique, lang), a.year, text(site.name, lang)].filter(Boolean).join(", "),
+    openGraph: photo ? { images: [{ url: photo.url, width: photo.width, height: photo.height, alt: photoAlt(a, lang) }] } : undefined,
   };
+}
+
+/** The description is plain text in the database; blank lines separate paragraphs. */
+function paragraphs(description: string): Block[] {
+  return description
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((p) => ({ type: "p", text: { bg: p } }));
 }
 
 export default async function ArtworkPage({ params }: PageProps<"/[lang]/tvorbi/[slug]">) {
   const { lang, slug } = await params;
   if (!isEnabledLocale(lang)) notFound();
-  const a = getArtwork(slug);
+  const a = await getArtwork(slug);
   if (!a) notFound();
   const t = getDictionary(lang);
 
-  const image = mainImage(a);
-  const series = (a.series ?? []).map(getSeries).filter((s) => s !== undefined);
-  const exhibitions = (a.exhibitions ?? []).map(getExhibition).filter((e) => e !== undefined);
+  const [main, ...morePhotos] = a.photos;
+  const [series, related] = await Promise.all([a.cycle ? getSeries(a.cycle.slug) : undefined, getRelatedArtworks(a)]);
+  const exhibitions = getExhibitionsOf(a.slug);
   const stories = getStoriesFor({ artwork: a.slug });
-  const related = getRelatedArtworks(a);
-  const details = (a.details ?? []).filter((d) => isVisible(d.verification));
-  const cites = makeCitations(lang, sourceIds(a, ...exhibitions), a.description?.flatMap((b) => (b.type === "p" ? b.sources ?? [] : [])));
+  const cites = makeCitations(lang, a.sources, sourceIds(...exhibitions));
   const email = site.contact.email;
 
   return (
@@ -64,11 +73,10 @@ export default async function ArtworkPage({ params }: PageProps<"/[lang]/tvorbi/
         </div>
         <aside className={styles.side}>
           <WallLabel artwork={a} locale={lang} as="h1" />
-          {image && (
+          {main && (
             <div className={styles.inspect}>
               <Inspector
-                image={{ src: image.src, width: image.width, height: image.height, alt: text(image.alt, lang), blur: image.blur }}
-                details={details.map((d) => ({ id: d.id, caption: text(d.caption, lang), region: d.region }))}
+                image={{ src: main.url, width: main.width, height: main.height, alt: photoAlt(a, lang), blur: main.blur }}
                 labels={{
                   open: t.artwork.inspect,
                   close: t.artwork.close,
@@ -76,22 +84,25 @@ export default async function ArtworkPage({ params }: PageProps<"/[lang]/tvorbi/
                   zoomOut: t.artwork.zoomOut,
                   reset: t.artwork.reset,
                   help: t.artwork.inspectHelp,
-                  details: t.artwork.details,
                 }}
               />
             </div>
           )}
-          {series.length > 0 && (
+          {main?.credit && <p className={styles.meta}>{main.credit}</p>}
+          {series && (
             <p className={styles.meta}>
               {t.artwork.series}{" "}
-              {series.map((s, i) => (
-                <span key={s.slug}>
-                  {i > 0 && ", "}
-                  <Link href={href(lang, seriesPath(s))}>
-                    <T value={s.title} locale={lang} />
-                  </Link>
-                </span>
-              ))}
+              <Link href={href(lang, seriesPath(series))}>
+                <T value={series.title} locale={lang} />
+              </Link>
+            </p>
+          )}
+          {a.category && (
+            <p className={styles.meta}>
+              {t.explorer.byCategory}:{" "}
+              <Link href={`${href(lang, "/tvorbi")}?kategoriya=${a.category.slug}`}>
+                <T value={a.category.name} locale={lang} />
+              </Link>
             </p>
           )}
           {exhibitions.length > 0 && (
@@ -112,19 +123,39 @@ export default async function ArtworkPage({ params }: PageProps<"/[lang]/tvorbi/
               </ul>
             </div>
           )}
-          {a.enquiries && email && (
+          {email && (
             <p className={styles.enquiry}>
-              <a href={`mailto:${email}?subject=${encodeURIComponent(`${t.artwork.enquirySubject} „${text(a.title, lang)}“`)}`}>
+              <a href={`mailto:${email}?subject=${encodeURIComponent(`${t.artwork.enquirySubject} „${text(nameOf(a), lang)}“`)}`}>
                 {t.artwork.enquire}
               </a>
             </p>
           )}
-          <EditorNote locale={lang}>{a.verification.note}</EditorNote>
         </aside>
       </div>
 
       <div className="page">
-        <Blocks blocks={a.description} locale={lang} cites={cites} />
+        {morePhotos.length > 0 && (
+          <ul className={styles.photos}>
+            {morePhotos.map((p) => (
+              <li key={p.url} style={{ "--ratio": p.width / p.height } as React.CSSProperties}>
+                <figure>
+                  <Image
+                    src={p.url}
+                    width={p.width}
+                    height={p.height}
+                    alt={p.alt ?? photoAlt(a, lang)}
+                    sizes="(min-width: 60rem) 30vw, 90vw"
+                    placeholder={p.blur ? "blur" : "empty"}
+                    blurDataURL={p.blur ?? undefined}
+                  />
+                  {p.credit && <figcaption>{p.credit}</figcaption>}
+                </figure>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {a.description && <Blocks blocks={paragraphs(a.description.bg)} locale={lang} cites={cites} />}
 
         {stories.length > 0 && (
           <section className={styles.section}>

@@ -12,32 +12,6 @@
   color: var(--surface);
 }
 
-.details {
-  margin-top: var(--space-5);
-}
-
-.detailsHeading {
-  font-family: var(--font-label);
-  font-weight: 700;
-}
-
-.details ul {
-  margin: var(--space-2) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.details button {
-  border: 0;
-  padding: var(--space-1) 0;
-  background: none;
-  text-align: left;
-  text-decoration: underline;
-  text-decoration-color: var(--line);
-  text-underline-offset: 0.2em;
-  cursor: zoom-in;
-}
-
 /* Viewer: the work alone on a dark ground, nothing else */
 .dialog {
   width: 100vw;

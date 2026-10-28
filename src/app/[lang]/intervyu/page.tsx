@@ -41,7 +41,7 @@ export default async function FilmPage({ params }: PageProps<"/[lang]/intervyu">
             </p>
           )}
         </header>
-        <FilmPlayer {...filmForPlayer(film, lang)} headingLevel={2} />
+        <FilmPlayer {...await filmForPlayer(film, lang)} headingLevel={2} />
         {film.credits && film.credits.length > 0 && (
           <dl className={styles.credits}>
             {film.credits.map((c) => (

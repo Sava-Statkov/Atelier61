@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "media": "node scripts/media-manifest.mjs",
-    "predev": "npm run media",
     "dev": "next dev --port 3300",
-    "prebuild": "npm run media",
     "build": "next build",
     "start": "next start --port 3300",
     "lint": "eslint",
@@ -17,7 +14,9 @@
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local --schema public > src/lib/supabase/database.types.ts && node scripts/format-types.mjs",
-    "test:db": "supabase test db"
+    "test:db": "supabase test db",
+    "db:seed": "node scripts/seed-local.mjs",
+    "check:refs": "vitest run --config vitest.refs.config.mts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -25,8 +24,7 @@
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "server-only": "^0.0.1",
-    "sharp": "^0.35.5"
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
@@ -35,6 +33,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "sharp": "^0.35.5",
     "supabase": "^2.122.0",
     "typescript": "^5",
     "vite": "8.3.4",

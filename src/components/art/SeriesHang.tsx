@@ -1,7 +1,8 @@
-import type { Artwork, Composition } from "@/content/types";
+import type { Composition } from "@/content/types";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { ratioOf } from "@/lib/artwork";
+import { ratioOf } from "@/lib/artworks/map";
+import type { Artwork } from "@/lib/artworks/types";
 import { ArtworkCard } from "./ArtworkCard";
 import styles from "./hang.module.css";
 
@@ -14,24 +15,21 @@ export function SeriesHang({
   composition,
   locale,
   label,
-  limit,
 }: {
   artworks: Artwork[];
   composition: Composition;
   locale: Locale;
   /** Accessible name for the scrolling sequence. */
   label: string;
-  limit?: number;
 }) {
-  const list = limit ? artworks.slice(0, limit) : artworks;
-  if (!list.length) {
+  if (!artworks.length) {
     return <p className={styles.empty}>{getDictionary(locale).artwork.photoPending}.</p>;
   }
 
   const size = composition === "salon" ? "s" : composition === "wall" ? "l" : "m";
   const labelMode = composition === "salon" ? "compact" : "full";
 
-  const items = list.map((a) => (
+  const items = artworks.map((a) => (
     <li key={a.slug} style={{ "--ratio": ratioOf(a) } as React.CSSProperties}>
       <ArtworkCard artwork={a} locale={locale} size={size} label={labelMode} />
     </li>
@@ -47,7 +45,7 @@ export function SeriesHang({
   }
 
   return (
-    <ul className={styles[composition]} data-count={list.length}>
+    <ul className={styles[composition]} data-count={artworks.length}>
       {items}
     </ul>
   );

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArtworkImage } from "@/components/art/ArtworkImage";
@@ -14,14 +13,15 @@ import { Cite } from "@/components/text/Cite";
 import { SourceList } from "@/components/text/SourceList";
 import { T } from "@/components/text/T";
 import { biography, site } from "@/content/site";
-import { href, isEnabledLocale, pick, text } from "@/i18n/config";
+import { href, isEnabledLocale, pick } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { ratioOf, resolveImage } from "@/lib/artwork";
+import { ratioOf } from "@/lib/artworks/map";
+import { getHomeArtwork, getSeriesList } from "@/lib/artworks/queries";
 import { makeCitations, sourceIds } from "@/lib/citations";
-import { getArtwork, getChronicle, getFilm, getQuote, getSeriesList, getStories } from "@/lib/content";
+import { getChronicle, getFilm, getQuote, getStories } from "@/lib/content";
 import { yearOf } from "@/lib/dates";
 import { filmForPlayer } from "@/lib/film";
-import { isImagePublishable, visible } from "@/lib/publish";
+import { visible } from "@/lib/publish";
 import styles from "./home.module.css";
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
@@ -29,10 +29,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   if (!isEnabledLocale(lang)) notFound();
   const t = getDictionary(lang);
 
-  const featured = getArtwork(site.featuredArtwork);
-  const heroImage = site.heroImage && isImagePublishable(site.heroImage) ? resolveImage(site.heroImage) : undefined;
+  const [featured, seriesList] = await Promise.all([getHomeArtwork(), getSeriesList()]);
   const film = getFilm("intervyu");
-  const seriesList = getSeriesList();
   const cycles = seriesList.filter((s) => s.kind !== "practice");
   const practices = seriesList.filter((s) => s.kind === "practice");
   const stories = getStories();
@@ -57,24 +55,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               <span>{first}</span> <span>{rest.join(" ")}</span>
             </h1>
           </div>
-          {heroImage ? (
-            <figure className={styles.featured} style={{ "--ratio": heroImage.width / heroImage.height } as React.CSSProperties}>
-              <Image
-                src={heroImage.src}
-                width={heroImage.width}
-                height={heroImage.height}
-                alt={text(heroImage.alt, lang)}
-                sizes="(min-width: 60rem) 40vw, 86vw"
-                quality={90}
-                loading="eager"
-                fetchPriority="high"
-                placeholder="blur"
-                blurDataURL={heroImage.blur}
-                className={styles.heroImage}
-              />
-              <EditorNote locale={lang}>{t.home.heroDetailsPending}</EditorNote>
-            </figure>
-          ) : featured && (
+          {/* The work chosen in the admin for the home page wall */}
+          {featured && (
             <figure className={styles.featured} style={{ "--ratio": ratioOf(featured) } as React.CSSProperties}>
               <Link href={href(lang, `/tvorbi/${featured.slug}`)} className={styles.featuredLink}>
                 <ArtworkImage artwork={featured} locale={lang} sizes="(min-width: 60rem) 40vw, 86vw" eager quality={90} />
@@ -107,7 +89,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             )}
           </div>
           <div className={styles.filmScreen}>
-            <FilmPlayer {...filmForPlayer(film, lang)} />
+            <FilmPlayer {...await filmForPlayer(film, lang)} />
           </div>
         </section>
       )}

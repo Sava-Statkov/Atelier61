@@ -76,6 +76,7 @@ export type Database = {
                     "height_cm": number | null;
                     "id": string;
                     "note": string | null;
+                    "on_home": boolean;
                     "published": boolean;
                     "slug": string;
                     "sort_order": number;
@@ -95,6 +96,7 @@ export type Database = {
                     "height_cm"?: number | null;
                     "id"?: string;
                     "note"?: string | null;
+                    "on_home"?: boolean;
                     "published"?: boolean;
                     "slug": string;
                     "sort_order"?: number;
@@ -113,6 +115,7 @@ export type Database = {
                     "height_cm"?: number | null;
                     "id"?: string;
                     "note"?: string | null;
+                    "on_home"?: boolean;
                     "published"?: boolean;
                     "slug"?: string;
                     "sort_order"?: number;

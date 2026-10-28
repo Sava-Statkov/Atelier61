@@ -1,9 +1,10 @@
 import Link from "next/link";
-import type { Series } from "@/content/types";
 import { href, text, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { makeCitations, sourceIds } from "@/lib/citations";
-import { getArtworksInSeries, getExhibition, getQuote, getStoriesFor } from "@/lib/content";
+import { countArtworks, getArtworksInSeries } from "@/lib/artworks/queries";
+import type { Series } from "@/lib/artworks/types";
+import { getExhibition, getQuote, getStoriesFor } from "@/lib/content";
 import { formatDate } from "@/lib/dates";
 import { SeriesHang } from "../art/SeriesHang";
 import { EditorNote } from "../editor/Badge";
@@ -16,10 +17,13 @@ import { SourceList } from "../text/SourceList";
 import { T } from "../text/T";
 import styles from "./seriesPage.module.css";
 
+/** How many works a cycle page hangs; all of them are on the works page, filtered by the cycle. */
+const HANG_LIMIT = 24;
+
 /** The page of a cycle (/cikli/…) or of a practice (its own address): works, facts, words, exhibitions. */
-export function SeriesPage({ series: s, locale }: { series: Series; locale: Locale }) {
+export async function SeriesPage({ series: s, locale }: { series: Series; locale: Locale }) {
   const t = getDictionary(locale);
-  const works = getArtworksInSeries(s.slug);
+  const [works, total] = await Promise.all([getArtworksInSeries(s.id, HANG_LIMIT), countArtworks({ cycleId: s.id })]);
   const quotes = (s.quotes ?? []).map(getQuote).filter((q) => q !== undefined);
   const exhibitions = (s.exhibitions ?? []).map(getExhibition).filter((e) => e !== undefined);
   const stories = getStoriesFor({ series: s.slug });
@@ -37,15 +41,24 @@ export function SeriesPage({ series: s, locale }: { series: Series; locale: Loca
           <T value={s.title} locale={locale} />
         </h1>
         {s.period && <p className={styles.period}>{formatDate(s.period.start, locale)}</p>}
-        <p className={styles.summary}>
-          <T value={s.summary} locale={locale} />
-          <Cite ids={s.verification.sources} cites={cites} />
-        </p>
+        {s.summary && (
+          <p className={styles.summary}>
+            <T value={s.summary} locale={locale} />
+            <Cite ids={s.verification.sources} cites={cites} />
+          </p>
+        )}
         <EditorNote locale={locale}>{s.verification.note}</EditorNote>
       </header>
 
       <div className={`page ${styles.hang}`}>
         <SeriesHang artworks={works} composition={s.composition} locale={locale} label={text(s.title, locale)} />
+        {total > works.length && (
+          <p className={styles.allWorks}>
+            <Link href={`${href(locale, "/tvorbi")}?cikal=${s.slug}`}>
+              {t.artwork.allInSeries.replace("{n}", String(total))}
+            </Link>
+          </p>
+        )}
       </div>
 
       <div className={`page ${styles.body}`}>
@@ -115,5 +128,5 @@ export function SeriesPage({ series: s, locale }: { series: Series; locale: Loca
 
 /** Title and description for a series page. */
 export function seriesMetadata(s: Series, locale: Locale) {
-  return { title: text(s.title, locale), description: text(s.summary, locale) };
+  return { title: text(s.title, locale), description: s.summary ? text(s.summary, locale) : undefined };
 }

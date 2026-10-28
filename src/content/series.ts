@@ -1,4 +1,4 @@
-import type { Series } from "./types";
+import type { SeriesText } from "./types";
 
 const rb = ["rb-2024-tanc"];
 const epoch = ["epoch-2025-sharzhove"];
@@ -6,19 +6,16 @@ const naim = ["naim-2007"];
 const kone = ["bnr-2026-kone"];
 
 /**
- * Cycles and long-running projects. Texts are plain summaries of the cited sources;
- * replace them with the artist's own wording once he has reviewed them.
- * The order of this list is the order on the home page; entries with `kind: "practice"` are shown
- * after the cycles and the link to all works.
+ * The sourced texts of the cycles and long-running projects: facts, the artist's words, periods and
+ * how each is presented. Names, descriptions, order and representative works are in the database
+ * (table `cycles`, managed in /admin) and are matched to these entries by slug.
+ * Texts are plain summaries of the cited sources; replace them with the artist's own wording once he
+ * has reviewed them. Entries with `kind: "practice"` are shown after the cycles, on their own address.
  */
-export const series: Series[] = [
+export const series: SeriesText[] = [
   {
     slug: "kamennata-kniga-na-balgariya",
-    title: { bg: "Каменната книга на България" },
     period: { start: { year: 2007 } },
-    summary: {
-      bg: "Живописен цикъл, представен през 2007 г. в Националния археологически институт с музей при БАН.",
-    },
     facts: [
       { text: { bg: "В изложбата от април 2007 г. са показани петнадесет маслени платна." }, verification: { status: "sourced", sources: naim } },
       {
@@ -35,16 +32,11 @@ export const series: Series[] = [
     composition: "wall",
     room: "hall",
     exhibitions: ["naim-2007"],
-    cover: "konnik",
     verification: { status: "sourced", sources: [...naim, ...epoch] },
   },
   {
     slug: "sharzhove-na-prehoda",
-    title: { bg: "Исторически шаржове на прехода" },
     period: { start: { year: 1991, approximate: true } },
-    summary: {
-      bg: "Шаржове с туш и перо, а по-късно и в цвят, на политици и публични личности от годините на прехода.",
-    },
     facts: [
       { text: { bg: "Първият му шарж е на Андрей Луканов, по покана на журналиста и издател Степан Ерамян." }, verification: { status: "sourced", sources: epoch } },
       {
@@ -81,11 +73,7 @@ export const series: Series[] = [
   },
   {
     slug: "tanc",
-    title: { bg: "Танц" },
     period: { start: { year: 2024 } },
-    summary: {
-      bg: "Четиридесет пана с човешки фигури в движение, показани в галерия „Нирвана“ в София през есента на 2024 г.",
-    },
     facts: [
       {
         text: { bg: "Продължение е на цикъла „Капризен вихър от щрихи“, показан година по-рано в същата галерия." },
@@ -105,11 +93,7 @@ export const series: Series[] = [
   },
   {
     slug: "yanuarski-kone",
-    title: { bg: "Януарски коне" },
     period: { start: { year: 2026 } },
-    summary: {
-      bg: "Акварели с коне в различни цветове, ходове и състояния. Първата му изложба, посветена на коне, в галерия Heritage в София.",
-    },
     facts: [
       {
         text: { bg: "Яздил е и неведнъж е ходил в конна база на Витоша, за да наблюдава конете." },
@@ -129,19 +113,13 @@ export const series: Series[] = [
   },
   {
     slug: "poslanie-kam-sveta",
-    title: { bg: "Послание към света" },
     period: { start: { year: 1993 } },
-    summary: { bg: "Мащабен графичен проект, представен през 1993 г." },
     composition: "wall",
     room: "hall",
     verification: { status: "sourced", sources: epoch, note: "Нужни са описание, брой листове и мястото на представяне." },
   },
   {
     slug: "portreti",
-    title: { bg: "Портрети на исторически личности" },
-    summary: {
-      bg: "Живописни цикли с психологически портрети: Моцарт, Шекспир, Салвадор Дали, Нострадамус, Ванга, Св. Никола и други.",
-    },
     facts: [
       {
         text: { bg: "Рисувал е и портретите на Св. София, Томас Джеферсън, Мария Монтесори, хан Кубрат, Давид Сасунски и Кольо Фичето." },
@@ -155,11 +133,7 @@ export const series: Series[] = [
   {
     slug: "risuvane-na-zhivo",
     kind: "practice",
-    title: { bg: "Рисуване на живо с музика" },
     period: { start: { year: 1994 } },
-    summary: {
-      bg: "Художникът рисува на сцената, докато музикантите свирят. От 2024 г. тези концерти са в основата на фестивала „Музикални зографи“.",
-    },
     facts: [
       {
         text: {

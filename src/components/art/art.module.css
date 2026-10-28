@@ -81,11 +81,6 @@
   font-size: var(--step--1);
 }
 
-.pending {
-  margin-top: var(--space-2);
-  font-style: italic;
-}
-
 /* A small portrait photograph, or its empty frame */
 .portrait {
   width: min(100%, 19rem);
@@ -118,69 +113,6 @@
   font-size: var(--step--1);
   line-height: 1.3;
   color: var(--text-muted);
-}
-
-/* Long label on the works page: generous room for facts and a short description */
-.detailed {
-  margin-top: var(--space-5);
-  max-width: 34rem;
-}
-
-.detailedTitle {
-  font-family: var(--font-text);
-  font-size: var(--step-1);
-  font-weight: 650;
-  line-height: 1.2;
-  color: var(--text);
-}
-
-.cardLink:hover + figcaption .detailedTitle,
-.cardLink:focus-visible + figcaption .detailedTitle {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
-}
-
-.detailedFacts {
-  margin-top: var(--space-3);
-  font-family: var(--font-label);
-  font-size: var(--step-0);
-  line-height: 1.45;
-  color: var(--text-muted);
-}
-
-.detailedSeries {
-  margin-top: var(--space-3);
-  font-family: var(--font-label);
-  font-size: var(--step--1);
-  color: var(--text-muted);
-}
-
-.detailedSummary {
-  margin-top: var(--space-4);
-  max-width: 42ch;
-  line-height: 1.5;
-}
-
-/* Editor-only: where a missing field will go */
-.slot {
-  width: fit-content;
-  min-width: 9em;
-  margin-top: var(--space-1);
-  padding-block: 0.1em;
-  border-bottom: 1px dashed var(--line);
-  font-family: var(--font-label);
-  font-size: var(--step--1);
-  color: var(--text-subtle);
-}
-
-.slotSummary {
-  width: 100%;
-  max-width: 42ch;
-  min-height: 5.5em;
-  margin-top: var(--space-4);
-  padding: 0.5em 0.7em;
-  border: 1px dashed var(--line);
 }
 
 .caption {

@@ -1,9 +1,10 @@
 import Link from "next/link";
-import type { Series } from "@/content/types";
 import { href, text, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Citations } from "@/lib/citations";
-import { getArtworksInSeries, getQuote } from "@/lib/content";
+import { getArtworksInSeries } from "@/lib/artworks/queries";
+import type { Series } from "@/lib/artworks/types";
+import { getQuote } from "@/lib/content";
 import { formatDate } from "@/lib/dates";
 import { seriesPath } from "@/lib/paths";
 import { SeriesHang } from "../art/SeriesHang";
@@ -19,7 +20,7 @@ import styles from "./series.module.css";
  * A series as a room on the home page: its hang follows the series' composition and its
  * surroundings follow its room. Facts and the artist's words sit beside the works, not under them.
  */
-export function SeriesRoom({
+export async function SeriesRoom({
   series: s,
   locale,
   cites,
@@ -33,10 +34,10 @@ export function SeriesRoom({
 }) {
   const t = getDictionary(locale);
   const Heading = `h${headingLevel}` as const;
-  const works = getArtworksInSeries(s.slug);
+  const limit = s.composition === "salon" ? 12 : s.composition === "wall" ? 2 : 8;
+  const works = await getArtworksInSeries(s.id, limit);
   const quote = s.quotes?.map(getQuote).find((q) => q !== undefined);
   const facts = quote ? s.facts?.slice(0, 1) : s.facts?.slice(0, 2);
-  const limit = s.composition === "salon" ? 12 : s.composition === "wall" ? 2 : 8;
   const id = `cikal-${s.slug}`;
 
   return (
@@ -50,10 +51,12 @@ export function SeriesRoom({
           <Badge verification={s.verification} locale={locale} />
         </Heading>
         {s.period && <p className={styles.period}>{formatDate(s.period.start, locale)}</p>}
-        <p className={styles.summary}>
-          <T value={s.summary} locale={locale} />
-          <Cite ids={s.verification.sources} cites={cites} />
-        </p>
+        {s.summary && (
+          <p className={styles.summary}>
+            <T value={s.summary} locale={locale} />
+            <Cite ids={s.verification.sources} cites={cites} />
+          </p>
+        )}
         <Facts facts={facts} locale={locale} cites={cites} />
         <p className={styles.more}>
           <Link href={href(locale, seriesPath(s))}>{s.kind === "practice" ? t.home.toPractice : t.home.toSeries}</Link>
@@ -65,7 +68,7 @@ export function SeriesRoom({
         </div>
       )}
       <div className={styles.hang}>
-        <SeriesHang artworks={works} composition={s.composition} locale={locale} label={text(s.title, locale)} limit={limit} />
+        <SeriesHang artworks={works} composition={s.composition} locale={locale} label={text(s.title, locale)} />
       </div>
     </section>
   );

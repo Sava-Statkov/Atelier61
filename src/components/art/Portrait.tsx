@@ -1,7 +1,6 @@
 import Image from "next/image";
 import type { ImageAsset } from "@/content/types";
 import { text, type Locale } from "@/i18n/config";
-import { resolveImage } from "@/lib/artwork";
 import { isImagePublishable } from "@/lib/publish";
 import styles from "./art.module.css";
 
@@ -20,20 +19,12 @@ export function Portrait({
   pendingLabel: string;
   className?: string;
 }) {
-  const photo = image && isImagePublishable(image) ? resolveImage(image) : undefined;
+  const photo = image && isImagePublishable(image) ? image : undefined;
   return (
     <figure className={`${styles.portrait} ${className ?? ""}`}>
       {photo ? (
         <>
-          <Image
-            src={photo.src}
-            width={photo.width}
-            height={photo.height}
-            alt={text(photo.alt, locale)}
-            sizes="20rem"
-            placeholder="blur"
-            blurDataURL={photo.blur}
-          />
+          <Image src={photo.src} alt={text(photo.alt, locale)} sizes="20rem" placeholder="blur" />
           {photo.credit && <figcaption>{photo.credit}</figcaption>}
         </>
       ) : (
