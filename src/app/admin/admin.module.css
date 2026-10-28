@@ -1,0 +1,482 @@
+/* The admin: the site's type and colours, but plain and practical, built for working through lists. */
+.body {
+  background: var(--p-wall);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.shell {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: 0 var(--gutter) var(--space-8);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-6);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 750;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-label);
+  font-weight: 600;
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+.who {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 0.95;
+  margin-bottom: var(--space-5);
+}
+
+.subtitle {
+  font-family: var(--font-label);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-block: var(--space-6) var(--space-3);
+}
+
+.lead {
+  max-width: 62ch;
+  color: var(--text-muted);
+  margin-bottom: var(--space-5);
+}
+
+/* ---------- Forms ---------- */
+.form {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 46rem;
+}
+
+.row {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.field > span,
+.legend {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  font-weight: 650;
+}
+
+.hint {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.input,
+.form input:not([type="checkbox"], [type="radio"], [type="file"]),
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--p-light);
+}
+
+.form textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.check {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.check input {
+  accent-color: var(--p-ink);
+}
+
+.fieldset {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sources {
+  display: grid;
+  gap: var(--space-1);
+  max-height: 14rem;
+  overflow: auto;
+  font-size: var(--step--1);
+}
+
+/* ---------- Buttons ---------- */
+.button,
+.buttonQuiet,
+.buttonDanger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  background: var(--text);
+  color: var(--surface);
+  font-family: var(--font-label);
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.buttonQuiet {
+  background: transparent;
+  color: var(--text);
+}
+
+.buttonDanger {
+  background: #8a2a1d;
+  border-color: #8a2a1d;
+}
+
+.button:disabled,
+.buttonQuiet:disabled,
+.buttonDanger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.small {
+  padding: 0.15rem 0.45rem;
+  font-size: var(--step--1);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ---------- Messages ---------- */
+.ok,
+.error,
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid;
+  background: var(--p-light);
+  max-width: 62ch;
+}
+
+.ok {
+  border-color: #2f6b3c;
+}
+
+.error {
+  border-color: #8a2a1d;
+}
+
+.notice {
+  border-color: var(--accent);
+}
+
+/* ---------- Lists of works ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.toolbar .field {
+  min-width: 9rem;
+}
+
+.toolbar input,
+.toolbar select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  background: var(--p-light);
+}
+
+.bulk {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  background: var(--p-wall-deep);
+  border: 1px solid var(--line);
+}
+
+.bulk select {
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--line-strong);
+  background: var(--p-light);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto auto 4.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--line);
+  background: var(--p-wall);
+}
+
+.item[data-dragging] {
+  opacity: 0.4;
+}
+
+.item[data-over] {
+  box-shadow: inset 0 3px 0 var(--accent);
+}
+
+.thumb {
+  width: 4.5rem;
+  height: 4.5rem;
+  display: grid;
+  place-items: center;
+  background: var(--p-wall-deep);
+  overflow: hidden;
+}
+
+.thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.itemTitle {
+  font-weight: 650;
+}
+
+.itemMeta {
+  font-family: var(--font-label);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.untitled {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0 0.4rem;
+  margin-right: 0.3rem;
+  border: 1px solid currentColor;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badgeDraft {
+  color: var(--text-muted);
+}
+
+.badgePublished {
+  color: #2f6b3c;
+}
+
+.badgeMark {
+  color: var(--accent);
+}
+
+.handle {
+  cursor: grab;
+  user-select: none;
+  color: var(--text-muted);
+}
+
+.itemButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  justify-content: flex-end;
+}
+
+/* ---------- Photographs of a work ---------- */
+.photos {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.photo {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  background: var(--p-light);
+  align-content: start;
+}
+
+.photo img {
+  width: 100%;
+  height: 12rem;
+  object-fit: contain;
+  background: var(--p-wall-deep);
+}
+
+.photo input,
+.photo select {
+  width: 100%;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--line-strong);
+  background: var(--p-wall);
+  font-size: var(--step--1);
+}
+
+/* ---------- Import ---------- */
+.drop {
+  display: grid;
+  place-items: center;
+  gap: var(--space-3);
+  min-height: 10rem;
+  padding: var(--space-5);
+  border: 2px dashed var(--line-strong);
+  background: var(--p-light);
+  text-align: center;
+}
+
+.drop[data-active] {
+  background: var(--p-wall-deep);
+  border-color: var(--accent);
+}
+
+.progress {
+  width: 100%;
+  height: 0.8rem;
+  accent-color: var(--p-ink);
+}
+
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  font-family: var(--font-label);
+}
+
+.files {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step--1);
+  max-height: 32rem;
+  overflow: auto;
+  border: 1px solid var(--line);
+}
+
+.files li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  padding: 0.3rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.files li[data-status="failed"] {
+  background: color-mix(in srgb, #8a2a1d 10%, transparent);
+}
+
+.files li[data-status="duplicate"] {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.files li[data-status="done"] {
+  color: var(--text-muted);
+}
+
+/* ---------- Tables (categories, cycles, files) ---------- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table input,
+.table textarea {
+  width: 100%;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--line-strong);
+  background: var(--p-light);
+}
+
+.login {
+  max-width: 24rem;
+  margin: 12vh auto 0;
+  padding: 0 var(--gutter);
+}

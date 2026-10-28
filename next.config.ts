@@ -46,7 +46,8 @@ const nextConfig: NextConfig = {
       beforeFiles: [],
       afterFiles: [
         { source: "/", destination: "/bg" },
-        { source: "/:first((?!bg$|en$|admin$)[^/.]+)/:rest*", destination: "/bg/:first/:rest*" },
+        // The first segment is checked up to its end ("/" or end of address), so /admin/… stays itself.
+        { source: "/:first((?!(?:bg|en|admin)(?:/|$))[^/.]+)/:rest*", destination: "/bg/:first/:rest*" },
       ],
       fallback: [],
     };

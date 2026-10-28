@@ -16,7 +16,9 @@
     "db:types": "supabase gen types typescript --local --schema public > src/lib/supabase/database.types.ts && node scripts/format-types.mjs",
     "test:db": "supabase test db",
     "db:seed": "node scripts/seed-local.mjs",
-    "check:refs": "vitest run --config vitest.refs.config.mts"
+    "check:refs": "vitest run --config vitest.refs.config.mts",
+    "db:admin": "node scripts/create-local-admin.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
