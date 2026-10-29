@@ -1,15 +1,19 @@
+import { execSync } from "node:child_process";
 import { defineConfig } from "@playwright/test";
 
 // End-to-end tests against the production build and the LOCAL Supabase in Docker:
 //   npm run db:start && npm run db:admin && npm run test:e2e
-// The site's Supabase address comes from .env.local, the test admin from .env.test.local.
-for (const file of [".env.local", ".env.test.local"]) {
-  try {
-    process.loadEnvFile(file);
-  } catch {
-    // missing file: the tests that need it say so
-  }
+// The test admin comes from .env.test.local. The site under test always uses the local Supabase,
+// whatever .env.local says, so the tests can never touch the production database.
+try {
+  process.loadEnvFile(".env.test.local");
+} catch {
+  // missing file: the tests that need it say so
 }
+
+const local = JSON.parse(execSync("npx supabase status -o json", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }));
+const localSupabase = { NEXT_PUBLIC_SUPABASE_URL: local.API_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: local.PUBLISHABLE_KEY };
+Object.assign(process.env, localSupabase);
 
 const port = 3301;
 
@@ -31,5 +35,6 @@ export default defineConfig({
     url: `http://localhost:${port}`,
     reuseExistingServer: false,
     timeout: 300_000,
+    env: localSupabase,
   },
 });

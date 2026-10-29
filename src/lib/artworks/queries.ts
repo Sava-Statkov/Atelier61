@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { series as seriesTexts } from "@/content/series";
 import type { SeriesText } from "@/content/types";
 import { isVisible } from "@/lib/publish";
+import { supabaseUrl } from "@/lib/supabase/env";
 import { publicClient } from "@/lib/supabase/public";
 import { fetchGalleryPage, selectArtworks, toArtwork, type GalleryQuery } from "./map";
 import type { Artwork, Series } from "./types";
@@ -16,7 +17,9 @@ import type { Artwork, Series } from "./types";
 export const ARTWORKS_TAG = "artworks";
 
 const cached = <A extends unknown[], R>(key: string, fn: (...args: A) => Promise<R>) =>
-  unstable_cache(fn, ["artworks", key], { tags: [ARTWORKS_TAG], revalidate: 86400 });
+  // The database address is part of the key, so switching between the local and the production
+  // database never serves the other one's cached data.
+  unstable_cache(fn, ["artworks", supabaseUrl, key], { tags: [ARTWORKS_TAG], revalidate: 86400 });
 
 function fail(what: string, error: { message: string }): never {
   throw new Error(`Could not load ${what}: ${error.message}`);
