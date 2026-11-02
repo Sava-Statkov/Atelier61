@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { exhibitions } from "./exhibitions";
 import { films } from "./films";
+import { futureIdeas } from "./ideas";
 import { quotes } from "./quotes";
 import { series } from "./series";
 import { biography } from "./site";
@@ -24,6 +25,7 @@ const verifications: Array<[string, Verification]> = [
   ...series.map((s) => [`series ${s.slug}`, s.verification] as [string, Verification]),
   ...series.flatMap((s) => (s.facts ?? []).map((f, i) => [`series ${s.slug} fact ${i}`, f.verification] as [string, Verification])),
   ...exhibitions.map((e) => [`exhibition ${e.id}`, e.verification] as [string, Verification]),
+  ...futureIdeas.map((i) => [`idea ${i.id}`, i.verification] as [string, Verification]),
   ...timeline.map((e) => [`event ${e.id}`, e.verification] as [string, Verification]),
   ...quotes.map((q) => [`quote ${q.id}`, q.verification] as [string, Verification]),
   ...films.map((f) => [`film ${f.slug}`, f.verification] as [string, Verification]),

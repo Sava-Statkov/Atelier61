@@ -34,14 +34,19 @@ export const getCategories = cached("categories", async () => {
 
 const defaultText = (slug: string): SeriesText => ({ slug, composition: "salon", verification: { status: "confirmed" } });
 
-/** Cycles in their order, each with its texts from src/content/series.ts. */
-export const getSeriesList = cached("series", async (): Promise<Series[]> => {
+/** The cycles as stored; their texts are added outside the cache, so edits to series.ts show at once. */
+const getCycles = cached("cycles", async () => {
   const { data, error } = await publicClient
     .from("cycles")
     .select("id, slug, name, description, featured_artwork_id")
     .order("sort_order");
   if (error) fail("cycles", error);
-  return data
+  return data;
+});
+
+/** Cycles in their order, each with its texts from src/content/series.ts. */
+export async function getSeriesList(): Promise<Series[]> {
+  return (await getCycles())
     .map((c) => ({
       ...(seriesTexts.find((t) => t.slug === c.slug) ?? defaultText(c.slug)),
       id: c.id,
@@ -50,7 +55,7 @@ export const getSeriesList = cached("series", async (): Promise<Series[]> => {
       featuredArtworkId: c.featured_artwork_id,
     }))
     .filter((s) => isVisible(s.verification));
-});
+}
 
 export async function getSeries(slug: string): Promise<Series | undefined> {
   return (await getSeriesList()).find((s) => s.slug === slug);

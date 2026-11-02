@@ -62,7 +62,7 @@ export const series: SeriesText[] = [
       },
     ],
     composition: "salon",
-    room: "paper",
+    room: "hall",
     quotes: ["sharzhove-istoriya"],
     exhibitions: ["parlamentarna-prikazka-1992", "sharzhove-2025"],
     verification: {

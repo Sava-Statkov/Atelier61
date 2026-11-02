@@ -44,6 +44,13 @@
   max-width: none;
 }
 
+/* Wider than any ordinary screen (a zoomed-out page), the strip stays in the centred page column */
+@media (min-width: 125rem) {
+  .series[data-composition="sequence"] .hang {
+    max-width: var(--page-max);
+  }
+}
+
 /* The link to all works of the cycle on the works page, under the hang */
 .allWorks {
   margin-top: var(--space-6);

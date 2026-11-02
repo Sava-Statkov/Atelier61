@@ -142,6 +142,14 @@ export type Exhibition = {
   verification: Verification;
 };
 
+/** An idea for a future exhibition. Not an announced event: those go in `exhibitions.ts`. */
+export type FutureIdea = {
+  id: string;
+  title: Localized;
+  text?: Localized;
+  verification: Verification;
+};
+
 export type Quote = {
   id: string;
   text: Localized;

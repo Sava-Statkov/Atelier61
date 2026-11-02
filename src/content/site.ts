@@ -7,15 +7,15 @@ import type { Fact, ImageAsset, Localized } from "./types";
  */
 export const site = {
   name: { bg: "Румен Статков", en: "Rumen Statkov" } satisfies Localized,
-  /** The mark in the header. Alternative spelling: "Ателие 61". */
-  brand: "Atelier 61",
+  /** The mark in the header. Alternative spelling: "Atelier 61". */
+  brand: "Ателие 61",
   /**
    * Browser tab titles: "Румен Статков" now. Set to true at launch to show both names,
    * e.g. "Творби — Румен Статков | Atelier 61".
    */
   brandInTitle: false,
-  /** Short line under the name on the home page. Plain facts, no slogan. */
-  line: { bg: "Български художник. Роден в Бургас." } satisfies Localized,
+  /** Short line under the name on the home page, in the family's words. */
+  line: { bg: "Български художник - Творчество, история и съвременност" } satisfies Localized,
   /**
    * Photograph of the artist in "Повече за художника" (file in src/assets/photos/, supplied by the family).
    * Add `credit: "Снимка: …"` once the photographer is known. With `null`, a labelled empty frame

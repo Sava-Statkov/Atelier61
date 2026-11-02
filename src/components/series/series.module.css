@@ -117,3 +117,13 @@
     grid-column: 2 / -2;
   }
 }
+
+/*
+ * Wider than any ordinary screen (a zoomed-out page, a very large monitor): the room's content joins
+ * the centred page column, while its background stays full width. Up to a 1920px window nothing changes.
+ */
+@media (min-width: 125rem) {
+  .room {
+    padding-inline: calc((100% - var(--page-max)) / 2 + var(--gutter));
+  }
+}

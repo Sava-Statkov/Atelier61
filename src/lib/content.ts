@@ -1,5 +1,6 @@
 import { exhibitions } from "@/content/exhibitions";
 import { films } from "@/content/films";
+import { futureIdeas } from "@/content/ideas";
 import { quotes } from "@/content/quotes";
 import { sources } from "@/content/sources";
 import { stories } from "@/content/stories";
@@ -30,6 +31,18 @@ export function getExhibition(id: string) {
 
 export function getExhibitions(): Exhibition[] {
   return visible(exhibitions).sort((a, b) => sortKey(a.dates) - sortKey(b.dates));
+}
+
+/** Exhibitions that have already opened, newest first. */
+export function getPastExhibitions(today = new Date()): Exhibition[] {
+  const now = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  return getExhibitions()
+    .filter((e) => sortKey(e.dates) <= now)
+    .reverse();
+}
+
+export function getFutureIdeas() {
+  return visible(futureIdeas);
 }
 
 export function isStoryVisible(s: Story) {

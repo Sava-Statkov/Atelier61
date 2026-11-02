@@ -1,7 +1,14 @@
-/* Stone band under the hall: the photograph fills the band */
+/*
+ * The vertical stone at the left of the hall. It starts above the hall, past the header, whatever
+ * the header's height; what lies above the top edge of the page is simply not shown. It touches the
+ * left edge of the screen, and on a very wide screen it stays beside the centred hall.
+ */
 .stone {
-  position: relative;
-  height: clamp(8rem, 22vh, 15rem);
+  position: absolute;
+  top: -20rem;
+  bottom: 0;
+  left: calc(var(--hall-left) - var(--stone-width));
+  width: var(--stone-width);
   overflow: hidden;
 }
 

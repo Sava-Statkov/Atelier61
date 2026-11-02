@@ -85,6 +85,9 @@
   --space-9: 8rem;
   --gutter: clamp(1rem, 4vw, 3.5rem);
   --page-max: 104rem;
+  /* The vertical stone on the home page; the header and the hall start at --hall-left, beside it */
+  --stone-width: clamp(3.5rem, 18vw - 40px, 15.5rem);
+  --hall-left: max(var(--stone-width), calc(50% - var(--page-max) / 2));
 
   /* Motion */
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);

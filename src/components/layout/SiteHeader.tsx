@@ -10,7 +10,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   const items = [
     { href: href(locale, "/tvorbi"), label: t.works },
     { href: href(locale, "/letopis"), label: t.chronicle },
-    { href: href(locale, "/intervyu"), label: t.film },
+    { href: href(locale, "/izlozhbi"), label: t.exhibitions },
     { href: href(locale, "/kontakt"), label: t.contact },
   ];
   return (

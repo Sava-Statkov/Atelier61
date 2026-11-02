@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { href, pick } from "@/i18n/config";
+import { getPastExhibitions } from "./content";
 import { formatDate, sortKey } from "./dates";
 import { isImagePublishable, isPublishable } from "./publish";
 
@@ -35,6 +36,13 @@ describe("dates", () => {
   it("sorts undated entries last", () => {
     expect(sortKey(undefined)).toBeGreaterThan(sortKey({ year: 2100 }));
     expect(sortKey({ year: 2007 })).toBeLessThan(sortKey({ year: 2007, month: 4 }));
+  });
+});
+
+describe("exhibitions", () => {
+  it("lists what has opened by the given day, newest first", () => {
+    const years = getPastExhibitions(new Date(2000, 0, 1)).map((e) => e.dates.start.year);
+    expect(years).toEqual([1998, 1994, 1992]);
   });
 });
 

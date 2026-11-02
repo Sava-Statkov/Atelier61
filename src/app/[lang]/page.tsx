@@ -5,7 +5,6 @@ import { Portrait } from "@/components/art/Portrait";
 import { WallLabel } from "@/components/art/WallLabel";
 import { EditorNote } from "@/components/editor/Badge";
 import { FilmPlayer } from "@/components/film/FilmPlayer";
-import { LightRays } from "@/components/room/LightRays";
 import { LightSlot } from "@/components/room/LightSlot";
 import { Stone } from "@/components/room/Stone";
 import { SeriesRoom } from "@/components/series/SeriesRoom";
@@ -47,8 +46,9 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   return (
     <>
-      {/* The hall: the name is lettered on the wall, the work hangs beside it, the stone below. */}
+      {/* The hall: the stone runs down the left, the name is lettered on the wall, the work hangs beside it. */}
       <section className={styles.hall} aria-labelledby="name">
+        <Stone />
         <div className={styles.wall}>
           <div className={styles.nameCell}>
             <h1 id="name" className={styles.name} lang={name.lang}>
@@ -66,27 +66,29 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               </figcaption>
             </figure>
           )}
-          <p className={styles.line}>
-            <T value={site.line} locale={lang} />
-          </p>
+          <div className={styles.lineCell}>
+            <p className={styles.line}>
+              <T value={site.line} locale={lang} />
+            </p>
+          </div>
         </div>
-        <Stone />
       </section>
 
-      {/* The interview, on a darkened stage. Its own page is reached from the menu and the footer. */}
+      {/* The interview beside a short biography. Its own page is reached from the footer. */}
       {film && (
-        <section className={styles.film} data-room="stage" aria-labelledby="film-heading">
-          <LightRays at={[38, 64]} />
+        <section className={styles.film} aria-labelledby="film-heading">
           <div className={styles.filmText}>
             <h2 id="film-heading" className={styles.filmTitle}>
-              <T value={film.title} locale={lang} />
+              {t.home.lifeAndWork}
             </h2>
-            {film.workingTitle && <p className={styles.workingTitle}>{t.film.workingTitle}</p>}
-            {film.synopsis && (
-              <p>
-                <T value={film.synopsis} locale={lang} />
-              </p>
-            )}
+            <div className={styles.filmBio}>
+              {bio.map((f, i) => (
+                <p key={i}>
+                  <T value={f.text} locale={lang} />
+                  <Cite ids={f.verification.sources} cites={cites} />
+                </p>
+              ))}
+            </div>
           </div>
           <div className={styles.filmScreen}>
             <FilmPlayer {...await filmForPlayer(film, lang)} />
@@ -179,14 +181,6 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           {t.home.about}
         </h2>
         <Portrait image={site.portrait} locale={lang} pendingLabel={t.home.portraitPending} className={styles.aboutPortrait} />
-        <div className={styles.bio}>
-          {bio.map((f, i) => (
-            <p key={i}>
-              <T value={f.text} locale={lang} />
-              <Cite ids={f.verification.sources} cites={cites} />
-            </p>
-          ))}
-        </div>
         <SourceList cites={cites} locale={lang} />
       </section>
     </>

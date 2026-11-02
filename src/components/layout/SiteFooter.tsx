@@ -36,6 +36,9 @@ export function SiteFooter({ locale }: { locale: Locale }) {
               <Link href={href(locale, "/letopis")}>{t.nav.chronicle}</Link>
             </li>
             <li>
+              <Link href={href(locale, "/izlozhbi")}>{t.nav.exhibitions}</Link>
+            </li>
+            <li>
               <Link href={href(locale, "/intervyu")}>{t.nav.film}</Link>
             </li>
             <li>

@@ -6,12 +6,13 @@ import type { Dictionary } from "./bg";
  */
 export const en: Dictionary = {
   skipToContent: "Skip to content",
-  nav: { label: "Main navigation", home: "Home", works: "Works", chronicle: "Chronicle", film: "Interview", contact: "Contact" },
+  nav: { label: "Main navigation", home: "Home", works: "Works", chronicle: "Chronicle", exhibitions: "Exhibitions", film: "Interview", contact: "Contact" },
   home: {
     series: "Series",
     chronicle: "Chronicle",
     stories: "Stories",
     about: "More about the artist",
+    lifeAndWork: "Rumen Statkov: life and work",
     portraitPending: "Photograph of Rumen Statkov to follow",
     toSeries: "Open the series",
     toPractice: "Open the page",
@@ -79,6 +80,13 @@ export const en: Dictionary = {
     intro: "Years, exhibitions and projects with a published source or confirmation from the family.",
     undated: "Undated",
     exhibitions: "Exhibitions and performances",
+  },
+  exhibitions: {
+    title: "Exhibitions",
+    intro: "Past exhibitions and performances by Rumen Statkov, and ideas for the future.",
+    past: "Past exhibitions and performances",
+    ideas: "Ideas for the future",
+    ideasPending: "Ideas for future exhibitions will be published here.",
   },
   contact: {
     title: "Contact",
